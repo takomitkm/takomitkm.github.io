@@ -145,6 +145,8 @@ const progress = {
   }
 };
 
+let skinPicked = false;
+
 const applyConfig = o => {
   settings.set('night', config.get('night'));
   settings.set('langshift', config.get('langshift'));
@@ -155,6 +157,11 @@ const applyConfig = o => {
   util.runOnDesktop(d => {
     config.get('closeAside') ? xaside.on() : xaside.off();
     skin.set(config.get('skin'));
+    if (!config.has('skin')) {
+      window.setTimeout(o => {
+        skinPicked || skin.set('colorful');
+      }, 3000);
+    }
   });
 };
 
@@ -779,9 +786,9 @@ live2d(z => {
       });
       api('site', sdata => {
         translater.init({
-          baidu_translate: {
-            pass: sdata.baidu_translate.pass,
-            pointer: sdata.baidu_translate.pointer
+          lang: config.get('translater'),
+          onpick(key) {
+            config.set('translater', key);
           },
           onstart(el) {
             activateSpinner(true);
@@ -800,14 +807,16 @@ live2d(z => {
         });
       });
       skin.init({
-        onclick(newKey) {
+        onclick(newKey, byUser) {
+          if (!byUser) return;
+          skinPicked = true;
           config.set('skin', newKey);
         }
       }, el => {
         checklist.skin = true;
       });
       settings.init({
-        onclick(key, flag) {
+        onclick(key, flag, byUser) {
           if (key === 'night') {
             flag ? root.classList.add('night') : root.classList.remove('night');
             !noCanvas.value && evanyou.draw(flag ? 'evanyou' : 'wave');
@@ -846,7 +855,7 @@ live2d(z => {
           } else if (key === 'autoplay') {
             flag && audioplayer.play();
           }
-          config.set(key, flag);
+          byUser && config.set(key, flag);
           settings.transfigure(!noCanvas.value);
         }
       }, el => {
@@ -883,7 +892,7 @@ live2d(z => {
         checklist.xdrawer = true;
       });
       settings.init({
-        onclick(key, flag) {
+        onclick(key, flag, byUser) {
           if (key === 'night') {
             flag ? root.classList.add('night') : root.classList.remove('night');
           } else if (key === 'langshift') {
@@ -899,7 +908,7 @@ live2d(z => {
           } else if (key === 'lyride') {
             flag ? root.classList.add('lyride') : root.classList.remove('lyride');
           }
-          config.set(key, flag);
+          byUser && config.set(key, flag);
         }
       }, el => {
         checklist.settings = true;

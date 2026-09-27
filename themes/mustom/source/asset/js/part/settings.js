@@ -12,7 +12,7 @@ const setup = o => {
   });
   setClick = function (e) {
     let newKey = this.getAttribute('data-settings-key');
-    set(newKey, !e.srcElement.classList.contains('active'));
+    set(newKey, !e.srcElement.classList.contains('active'), true);
   };
   element.querySelectorAll('[data-settings-key]').forEach(el => {
     el.addEventListener('click', setClick);
@@ -31,10 +31,10 @@ const init = (params, callback) => {
   });
 };
 
-const set = (key, flag) => {
+const set = (key, flag, byUser) => {
   let target = element.querySelector(`[data-settings-key="${key}"]`);
   flag ? target.classList.add('active') : target.classList.remove('active');
-  listener && listener(key, flag);
+  listener && listener(key, flag, byUser);
 }
 
 const transfigure = flag => {

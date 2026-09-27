@@ -4,6 +4,8 @@ const isMobile = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|
 
 const isChinese = /^(zh)/i.test(window.navigator.browserLanguage || window.navigator.language || 'zh');
 
+const saved = storage.get('config') || {};
+
 const config = Object.assign({
   closeDrawer: isMobile,
   closeAside: false,
@@ -12,21 +14,36 @@ const config = Object.assign({
   night: false,
   transfigure: false,
   lyride: true,
-  autoplay: false
-}, storage.get('config'));
+  autoplay: false,
+  translater: 'zh'
+}, saved);
 
 const get = key => {
   return config[key];
 };
 
+// set() persists the whole merged object, so 'config' cannot tell a chosen value from a default.
+// Every set() is a visitor action (boot-time application goes through get() only), so the keys
+// written are recorded separately and has() answers "did the visitor choose this before".
+const chosen = storage.get('configChosen') || [];
+
 const set = (key, value) => {
   if (Object.keys(config).includes(key)) {
     config[key] = value;
     storage.set('config', config);
+    if (chosen.indexOf(key) < 0) {
+      chosen.push(key);
+      storage.set('configChosen', chosen);
+    }
   }
+};
+
+const has = key => {
+  return chosen.indexOf(key) >= 0;
 };
 
 export default {
   get,
+  has,
   set
 }

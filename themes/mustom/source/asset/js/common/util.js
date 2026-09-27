@@ -1,8 +1,3 @@
-import fetch from "./fetch.js";
-import _run_md5 from "../plugin/md5.min.js";
-
-_run_md5();
-
 const mobileRegex = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i;
 
 const getChromeVersion = o => {
@@ -124,46 +119,42 @@ function decodePass(string, seat) {
 };
 
 /**
-* Baidu Translate
-* 
-* @param {String} baidu_translate 
-* @param {String} query 
-* @param {String} lang 
-* @param {Function} callback 
+* Google Translate (public, key-free endpoint used by the Chrome in-page translator)
+*
+* @param {String} query
+* @param {String} lang  zh | en | jp
+* @param {Function} callback
 */
-function baiduTranslate(baidu_translate, query, lang, callback) {
+const googleLangs = { zh: 'zh-CN', en: 'en', jp: 'ja' };
+
+const escapeHtml = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function googleTranslate(query, lang, callback) {
  if (typeof callback != 'function') return false;
- if (typeof query != 'string' || typeof lang != 'string') return callback({ error: 'PARAMS ERROR / 参数错误' });
+ if (typeof query != 'string' || typeof lang != 'string') return callback({ error: '<p class="error">PARAMS ERROR / 参数错误</p>' });
+ if (query.length === 0) return callback({ error: '<p class="error">EMPTY QUERY / 空查询</p>' });
+ if (query.length > 5000) return callback({ error: '<p class="error">HUGE QUERY / 巨查询</p>' });
 
- var url = '//api.fanyi.baidu.com/api/trans/vip/translate';
- if (window.location.protocol.includes('https')) {
-   url = '//fanyi-api.baidu.com/api/trans/vip/translate';
- }
- var salt = Date.now();
- var from = 'auto';
- var sign = md5(baidu_translate.appid + query + salt + baidu_translate.appkey);
+ const to = googleLangs[lang] || lang;
+ const url = 'https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl='
+   + encodeURIComponent(to) + '&q=' + encodeURIComponent(query);
 
- if (query.length === 0) {
-   callback({ error: '<p class="error">EMPTY QUERY / 空查询</p>' });
- } else if (query.length < 100) {
-   fetch(url, {
-     'q': query,
-     'appid': baidu_translate.appid,
-     'salt': salt,
-     'from': from,
-     'to': lang,
-     'sign': sign,
-     'callback': 'baiduTranslate' + salt
-   }, (result) => {
-     if (result && result.trans_result) {
-       callback({ result: '<p class="result">RESULT / 翻译结果：</p><p class="content">' + result.trans_result[0].dst + '</p>' });
-     } else {
-       callback({ error: '<p class="error">WRONG QUERY / 错查询</p>' });
-     }
-   }, true);
- } else {
-   callback({ error: '<p class="error">HUGE QUERY / 巨查询</p>' });
- }
+ const abort = new AbortController();
+ const timer = window.setTimeout(() => abort.abort(), 8000);
+ const fail = msg => callback({ error: '<p class="error">TRANSLATE FAILED / 翻译失败：' + msg + '</p>' });
+
+ window.fetch(url, { signal: abort.signal }).then(r => {
+   if (!r.ok) throw new Error('HTTP ' + r.status);
+   return r.json();
+ }).then(data => {
+   const text = (Array.isArray(data) ? data : [])
+     .map(seg => Array.isArray(seg) && typeof seg[0] === 'string' ? seg[0] : '')
+     .join('');
+   if (!text) return fail('空响应');
+   callback({ result: '<p class="result">RESULT / 翻译结果：</p><p class="content">' + escapeHtml(text) + '</p>' });
+ }).catch(e => {
+   fail(e && e.name === 'AbortError' ? '超时' : (e && e.message) || '网络不可达');
+ }).finally(() => window.clearTimeout(timer));
 }
 
 export default {
@@ -176,6 +167,6 @@ export default {
   forIn,
   layoutParts,
   decodePass,
-  baiduTranslate,
+  googleTranslate,
   getChromeVersion
 }

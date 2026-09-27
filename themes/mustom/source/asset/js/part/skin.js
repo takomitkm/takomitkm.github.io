@@ -16,7 +16,7 @@ const setup = o => {
   });
   setClick = function (e) {
     let newKey = this.getAttribute('data-skin-key');
-    set(newKey);
+    set(newKey, true);
   };
   element.querySelectorAll('[data-skin-key]').forEach(el => {
     el.addEventListener('click', setClick);
@@ -35,7 +35,7 @@ const init = (params, callback) => {
   });
 };
 
-const set = key => {
+const set = (key, byUser) => {
   element.querySelectorAll('[data-skin-key].active').forEach(el => {
     el.classList.remove('active');
   });
@@ -54,10 +54,11 @@ const set = key => {
     root.classList.remove('gray');
     root.classList.add('colorful');
   }
-  listener && listener(key);
+  listener && listener(key, byUser);
 };
 
 const colorIcons = {
+  exclude: 'i.fa-github',
   queue: (o => {
     let result = [];
     for (let i = 1; i <= 5; i++) { // 5 colors, 1 - 5
@@ -69,6 +70,7 @@ const colorIcons = {
     let that = this;
     let is = document.querySelectorAll('i.fas:not([data-colored="true"]), i.fab:not([data-colored="true"]), i.far:not([data-colored="true"])');
     is.forEach(i => {
+      if (i.matches(that.exclude)) return;
       let next = that.queue.shift();
       i.classList.add('color_' + next);
       i.setAttribute('data-colored', true);

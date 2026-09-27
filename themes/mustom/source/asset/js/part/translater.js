@@ -3,9 +3,16 @@ import util from "../common/util.js";
 
 let tag = 'translater';
 let element = null;
-let credential = {};
 let onstart = null;
 let onended = null;
+let onpick = null;
+let to = 'zh';
+
+const langs = {
+  zh: '.p-translater-bar-zh',
+  en: '.p-translater-bar-en',
+  jp: '.p-translater-bar-jp'
+};
 
 const data = {
   isInside: false,
@@ -40,6 +47,13 @@ const setContent = (show, content) => {
   }
 };
 
+const markTo = () => {
+  Object.keys(langs).forEach(key => {
+    let el = element.querySelector(langs[key]);
+    key === to ? el.classList.add('default') : el.classList.remove('default');
+  });
+};
+
 const setup = o => {
   let target = document.querySelector('.m-main');
 
@@ -66,38 +80,25 @@ const setup = o => {
         if (document.execCommand('copy')) {
           setContent(true, '<p>Copied! 复制成功！</p>');
         }
-      } else if (data.isPathIn(epath, element.querySelector('.p-translater-bar-zh'))) {
-        onstart(element);
-        util.baiduTranslate(credential, query, 'zh', (data) => {
-          onended(element);
-          if (data.error) {
-            setContent(true, data.error);
-          } else if (data.result) {
-            setContent(true, data.result);
-          }
-        });
-      } else if (data.isPathIn(epath, element.querySelector('.p-translater-bar-en'))) {
-        onstart(element);
-        util.baiduTranslate(credential, query, 'en', (data) => {
-          onended(element);
-          if (data.error) {
-            setContent(true, data.error);
-          } else if (data.result) {
-            setContent(true, data.result);
-          }
-        });
-      } else if (data.isPathIn(epath, element.querySelector('.p-translater-bar-jp'))) {
-        onstart(element);
-        util.baiduTranslate(credential, query, 'jp', (data) => {
-          onended(element);
-          if (data.error) {
-            setContent(true, data.error);
-          } else if (data.result) {
-            setContent(true, data.result);
-          }
-        });
       } else {
-        setContent(false);
+        let hit = Object.keys(langs).find(key => data.isPathIn(epath, element.querySelector(langs[key])));
+        if (!hit && data.isPathIn(epath, element.querySelector('.p-translater-bar-to'))) hit = to;
+        if (!hit) {
+          setContent(false);
+        } else {
+          to = hit;
+          markTo();
+          onpick && onpick(hit);
+          onstart && onstart(element);
+          util.googleTranslate(query, hit, (result) => {
+            onended && onended(element);
+            if (result.error) {
+              setContent(true, result.error);
+            } else if (result.result) {
+              setContent(true, result.result);
+            }
+          });
+        }
       }
     } else {
       element.classList.remove('moved');
@@ -107,6 +108,8 @@ const setup = o => {
     data.isInside = false;
   };
   document.addEventListener('mouseup', data.setMouseup);
+
+  markTo();
 };
 
 const init = (params, callback) => {
@@ -114,9 +117,10 @@ const init = (params, callback) => {
     element = el;
     document.querySelector(tag) && document.querySelector(tag).replaceWith(element);
     if (params) {
-      credential = util.decodePass(params.baidu_translate.pass, params.baidu_translate.pointer);
       params.onstart && (onstart = params.onstart);
       params.onended && (onended = params.onended);
+      params.onpick && (onpick = params.onpick);
+      if (typeof params.lang === 'string' && langs[params.lang]) to = params.lang;
       setup();
     }
     callback && callback(element);
