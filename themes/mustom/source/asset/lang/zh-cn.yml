@@ -15,6 +15,7 @@ menus:
       home: 首页
       archive: 归档
       about: 关于
+      live: 直播间
   job:
     caption: 工作
     items:
@@ -107,6 +108,7 @@ pather:
   catarchive: "归档 [分类]"
   tagarchive: "归档 [标签]"
   about: 关于
+  live: 直播间
   resume: 简历小贴士
   letter: 求职信小贴士
   library: 代码库

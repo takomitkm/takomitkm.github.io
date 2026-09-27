@@ -61,6 +61,9 @@ menus:
     about:
       url: /about/
       icon: '<i class="fas fa-user fa-fw"></i>'
+    live:
+      url: /live/
+      icon: '<i class="fas fa-video fa-fw"></i>'
 skinicon: '<i class="fas fa-tshirt fa-fw"></i>'
 skin:
   default: "#000000"

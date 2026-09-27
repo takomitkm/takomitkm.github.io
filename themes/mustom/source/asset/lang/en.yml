@@ -15,6 +15,7 @@ menus:
       home: Home
       archive: Archive
       about: About
+      live: Live
   job:
     caption: JOB
     items:
@@ -107,6 +108,7 @@ pather:
   catarchive: "Archive [Categories]"
   tagarchive: "Archive [Tags]"
   about: About
+  live: Live
   resume: Resume Tips
   letter: Cover Letter Tips
   library: Code Library
