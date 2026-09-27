@@ -90,8 +90,8 @@ audioplayer:
     plus: '<i class="fas fa-plus fa-fw"></i>'
 meting:
   server: netease
-  type: playlist
-  id: ""
+  type: song
+  id: "448155"
   theme: "#ff3300"
   list_height: "297px"
 recentposts:
