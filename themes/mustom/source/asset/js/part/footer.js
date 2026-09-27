@@ -13,8 +13,6 @@ const init = (params, callback) => {
 
 const update = data => {
   if (!element) return;
-  data.site_pv !== undefined && (element.querySelector('.p-footer-pv').innerText = data.site_pv);
-  data.site_uv !== undefined && (element.querySelector('.p-footer-uv').innerText = data.site_uv);
   data.site_wd !== undefined && (element.querySelector('.p-footer-wd').innerText = data.site_wd);
 };
 
