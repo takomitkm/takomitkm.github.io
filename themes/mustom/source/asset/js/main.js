@@ -473,6 +473,12 @@ const pjax = {
   }
 };
 
+const postViews = num => {
+  root.querySelectorAll('.p-post-pv-num').forEach(el => {
+    el.innerText = num ? num : '∞';
+  });
+};
+
 const linksStore = {
   noPopState: true,
   setClick(e) {
@@ -489,6 +495,7 @@ const linksStore = {
             site_pv: result && result.site_pv ? result.site_pv : '∞',
             site_uv: result && result.site_uv ? result.site_uv : '∞',
           });
+          postViews(result && result.page_pv);
         }, true);
       });
     }
@@ -585,6 +592,13 @@ live2d(z => {
         checklist.brand = true;
       });
       footer.init(null, el => {
+        el.querySelectorAll('.p-footer-count-item').forEach(item => {
+          item.addEventListener('click', e => {
+            let opened = item.classList.contains('on');
+            el.querySelectorAll('.p-footer-count-item.on').forEach(o => o.classList.remove('on'));
+            !opened && item.classList.add('on');
+          });
+        });
         fetch("//busuanzi.ibruce.info/busuanzi", {
           jsonpCallback: "BusuanziCallback_" + Math.floor(1099511627776 * Math.random())
         }, result => {
@@ -593,6 +607,7 @@ live2d(z => {
             site_uv: result && result.site_uv ? result.site_uv : '∞',
             site_wd: sdata && sdata.word4site ? sdata.word4site : '∞'
           });
+          postViews(result && result.page_pv);
         }, true);
         checklist.footer = true;
       });

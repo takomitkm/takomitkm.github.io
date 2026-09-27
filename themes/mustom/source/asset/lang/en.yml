@@ -46,6 +46,9 @@ footer:
   powered: Powered by %s
   theme: Theme %s By %s
   license: Creative Commons Attribution-Noncommercial-ShareAlike 4.0 International license
+  tipPv: "Site page views (PV): counted by the third-party service busuanzi for this domain, includes your own visits, no anti-abuse"
+  tipUv: "Site unique visitors (UV): deduplicated by busuanzi per browser; another browser, a cleared cache or a new network counts as a new visitor"
+  tipWd: "Total words: word count of all posts, computed by Hexo at build time, nothing to do with visitors"
 panels:
   categories: CATEGORIES
   tags: TAGS
@@ -77,7 +80,7 @@ post:
   categories: Categories of this post
   wordcount: Word count of this post
   min2readt: Estimated time for reading
-  viewcount: Visitor count of this post
+  viewcount: Visitor count of this post (busuanzi, keyed by this page url)
   ending:
     head: The post above ended
     tail: Thanks for your reading

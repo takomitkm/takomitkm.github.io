@@ -35,14 +35,7 @@ const init = (params, callback) => {
 
 const update = langData => {
   if (!element) return;
-  let v = document.querySelector('.leancloud_visitors');
-  if (v) {
-    v.id = window.location.pathname.replace(/\/[^\/]+.html$/, '/');
-    v.setAttribute('data-flag-title', document.title.replace(/ - [^-]+$/, '').trim());
-    onupdate && onupdate(appid, appkey, langData, valine.newDom());
-  } else {
-    onupdate && onupdate(appid, appkey, langData, valine.newDom());
-  }
+  onupdate && onupdate(appid, appkey, langData, valine.newDom());
 };
 
 export default {

@@ -24,6 +24,47 @@
     padding-bottom s('calc(20vh + %s)', $font_size * 2)
     border-top $gap * 0.5 solid var(--color-clear)
 
+.p-footer-count
+  position relative
+  display flex
+  flex-wrap wrap
+  justify-content center
+  gap $gap * 0.5
+  padding-top $gap
+
+.p-footer-count-item
+  display inline-flex
+  align-items center
+  gap $gap * 0.5
+  cursor help
+  outline none
+
+.p-footer-count-item:hover .p-footer-tip, .p-footer-count-item:focus .p-footer-tip, .p-footer-count-item.on .p-footer-tip
+  opacity 1
+  visibility visible
+
+.p-footer-tip
+  position absolute
+  left 50%
+  bottom s('calc(100% + %s)', $gap * 0.5)
+  transform translateX(-50%)
+  width max-content
+  max-width s('min(90vw, %s)', $font_size * 22)
+  padding $gap * 0.5 $gap
+  font-size $font_size * 0.75
+  line-height 1.5
+  font-style normal
+  text-align left
+  color var(--color-header-text)
+  background var(--color-clear)
+  border 1px solid var(--color-post-ending)
+  border-radius $gap * 0.5
+  opacity 0
+  visibility hidden
+  transition opacity 0.2s
+  pointer-events none
+  z-index zIndex(1)
+
 .p-footer-powered, .p-footer-theme
   @media (min-width: $app_mobile_width_min)
     a
