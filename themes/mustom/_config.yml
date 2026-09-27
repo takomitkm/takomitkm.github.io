@@ -17,7 +17,7 @@ favicon:
 author:
   small: /asset/img/author.small.png
   medium: /asset/img/author.medium.png
-  large: /asset/img/author.large.png
+  large: https://github.com/takomitkm.png?size=256
 hitokoto:
   icon: '<i class="fas fa-circle-notch fa-fw"></i>'
   image: /asset/img/qf3cu.huaji.png

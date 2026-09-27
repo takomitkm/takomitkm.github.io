@@ -35,7 +35,7 @@ def fib(n: int) -> int:
 ```
 
 ```bash
-export PATH="/s/apps/llm/node/node-v22.20.0-win-x64:$PATH"
+alias hexo='deno run -A npm:hexo'
 hexo server
 ```
 
@@ -43,8 +43,8 @@ hexo server
 
 | 项目 | 值 | 说明 |
 | --- | --- | --- |
-| 断点 | 991px | ShiftNav 只在窄屏出现 |
-| 看板娘尺寸 | 800x800 canvas | 由 `waifu.css` 控制显示大小 |
+| 断点 | 1023px | 与主题的 `$app_mobile_width` 对齐，ShiftNav 只在这个宽度以下出现 |
+| 看板娘尺寸 | 300x300 | `#live2d` 的 CSS 显示尺寸，改 `waifu.css` 即可 |
 | 模型 | haruto | Live2D Cubism 2 |
 
 ## 其它
