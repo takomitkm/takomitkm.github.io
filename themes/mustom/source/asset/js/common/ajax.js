@@ -21,7 +21,7 @@ const dataFormat = obj => {
 export default options => {
   if (!options.method || !options.url) return;
   let request = new XMLHttpRequest();
-  request.open(options.method, options.url + '?' + dataFormat(options.data));
+  request.open(options.method, options.data ? options.url + '?' + dataFormat(options.data) : options.url);
   request.timeout = 30000;
   if (options.method.toLowerCase() === 'post') {
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
