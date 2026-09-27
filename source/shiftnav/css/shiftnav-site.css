@@ -1,0 +1,50 @@
+#shiftnav-toggle-main {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: auto;
+  max-width: none;
+  height: 40px;
+  padding: 0 14px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#shiftnav-toggle-main .shiftnav-toggle-title {
+  display: none;
+}
+
+.shiftnav-inner {
+  overflow-y: auto;
+}
+
+/* 1023px = mustom 自己的 $app_mobile_width；两套菜单在这个宽度以下互换 */
+@media (max-width: 1023px) {
+  #shiftnav-toggle-main {
+    display: flex;
+  }
+  .m-header {
+    padding-left: 62px;
+  }
+  .p-xdrawer,
+  .m-closeDrawer,
+  .m-drawer {
+    display: none !important;
+  }
+  .m-app-inner,
+  .m-frame,
+  .m-main,
+  .m-footer {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}

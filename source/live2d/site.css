@@ -1,0 +1,16 @@
+#waifu,
+#waifu-toggle {
+  z-index: 99997;
+}
+
+@media (min-width: 1024px) {
+  #waifu {
+    left: auto;
+    right: 76px;
+  }
+  #waifu-tool {
+    right: auto;
+    left: -10px;
+    top: 60px;
+  }
+}

@@ -1,0 +1,88 @@
+# https://hexo.io/docs/configuration.html
+
+title: takomitkm
+subtitle: ''
+description: 'personal blog'
+keywords:
+author: takomitkm
+language: zh-CN
+timezone: Asia/Shanghai
+
+url: https://takomitkm.github.io/
+root: /
+asset_in_js: false
+
+# 主题用这个开关决定加载本地编译资源还是作者的 CDN；false = 全部本地
+CDN_ENABLE: false
+
+permalink: posts/:abbrlink/
+permalink_defaults:
+pretty_urls:
+  trailing_index: false
+  trailing_html: false
+
+# 主题内置 scripts/plugin/hexo-abbrlink 会读取这里
+abbrlink:
+  alg: crc32
+  seed: 20260927
+  count: 1
+  dec: false
+
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+new_post_name: :title.md
+default_layout: post
+titlecase: false
+external_link:
+  enable: false
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+syntax_highlighter: highlight.js
+highlight:
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+
+archive_generator:
+  per_page: 20
+  yearly: true
+  monthly: true
+
+default_category: uncategorized
+category_map:
+tag_map:
+
+meta_generator: true
+
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+updated_at: false
+
+per_page: 10
+pagination_dir: page
+
+theme: mustom
+
+deploy:
+  type: git
