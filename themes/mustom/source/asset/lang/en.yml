@@ -46,6 +46,8 @@ footer:
   powered: Powered by %s
   theme: Theme %s By %s
   license: Creative Commons Attribution-Noncommercial-ShareAlike 4.0 International license
+  tipPv: "Site page views (PV): counted by the third-party service busuanzi for this domain, includes your own visits, no anti-abuse"
+  tipUv: "Site unique visitors (UV): deduplicated by busuanzi per browser; another browser, a cleared cache or a new network counts as a new visitor"
   tipWd: "Total words: word count of all posts, computed by Hexo at build time, nothing to do with visitors"
 panels:
   categories: CATEGORIES
@@ -98,6 +100,7 @@ post:
     text: All articles/posts in this website are licensed under %s unless stating additionally.
 page:
   caption: PAGE
+  viewcount: "Views of this page (busuanzi, keyed by this page url)"
 toc:
   caption: TABLE OF CONTENTS
   noheadings: "?(￣△￣?) [No Table of Contents]"

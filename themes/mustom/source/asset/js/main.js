@@ -491,6 +491,10 @@ const linksStore = {
         fetch("//busuanzi.ibruce.info/busuanzi", {
           jsonpCallback: "BusuanziCallback_" + Math.floor(1099511627776 * Math.random())
         }, result => {
+          footer.update({
+            site_pv: result && result.site_pv ? result.site_pv : '∞',
+            site_uv: result && result.site_uv ? result.site_uv : '∞',
+          });
           postViews(result && result.page_pv);
         }, true);
       });
@@ -599,6 +603,8 @@ live2d(z => {
           jsonpCallback: "BusuanziCallback_" + Math.floor(1099511627776 * Math.random())
         }, result => {
           footer.update({
+            site_pv: result && result.site_pv ? result.site_pv : '∞',
+            site_uv: result && result.site_uv ? result.site_uv : '∞',
             site_wd: sdata && sdata.word4site ? sdata.word4site : '∞'
           });
           postViews(result && result.page_pv);

@@ -78,6 +78,8 @@ settings:
   autoplay: '<i class="fas fa-play-circle fa-fw"></i>'
 footer:
   icons:
+    pv: '<i class="fas fa-eye fa-fw"></i>'
+    uv: '<i class="fas fa-user-tie fa-fw"></i>'
     wd: '<i class="fas fa-file-word fa-fw"></i>'
 panels:
   categories: '<i class="fas fa-folder-open fa-fw"></i>'

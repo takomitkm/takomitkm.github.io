@@ -46,6 +46,8 @@ footer:
   powered: 由 %s 强力驱动
   theme: 主题 %s By %s
   license: 知识共享署名-非商业用途-相同方式共享4.0国际许可协议
+  tipPv: 全站浏览量 PV：第三方服务"不蒜子"按本站地址累计的打开次数，包含你自己打开的次数，无防刷
+  tipUv: 全站独立访客 UV：不蒜子按访客浏览器去重后的数量，换浏览器、清缓存或换网络会被当成新的人
   tipWd: 全站字数：Hexo 构建时统计的所有文章正文字数，和访客无关
 panels:
   categories: 分类
@@ -98,6 +100,7 @@ post:
     text: 本站所有文章除特别声明外，均采用 %s 许可协议。转载请注明出处！
 page:
   caption: 页面
+  viewcount: 本页访问量（不蒜子按本页地址统计）
 toc:
   caption: 目录
   noheadings: "?(￣△￣?) [没有目录]"
