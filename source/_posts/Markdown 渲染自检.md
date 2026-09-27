@@ -45,7 +45,7 @@ hexo server
 | --- | --- | --- |
 | 断点 | 1023px | 与主题的 `$app_mobile_width` 对齐，ShiftNav 只在这个宽度以下出现 |
 | 看板娘尺寸 | 300x300 | `#live2d` 的 CSS 显示尺寸，改 `waifu.css` 即可 |
-| 模型 | haruto | Live2D Cubism 2 |
+| 模型 | umaru | Live2D Cubism 2，来自 HesperusVenus/live2d |
 
 ## 其它
 
