@@ -58,15 +58,15 @@
   white-space nowrap
   text-overflow ellipsis
   font-size 1.25em
-  &:before
-    content '-「 '
-    background var(--color-background)
-  &:after
-    content ' 」-'
-    background var(--color-background)
 
 .p-hitokoto-name
   background var(--color-background)
+  display inline-block
+  line-height 1
+  &:before
+    content '-「 '
+  &:after
+    content ' 」-'
 
 .p-hitokoto-word
   text-align center
