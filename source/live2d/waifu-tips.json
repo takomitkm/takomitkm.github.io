@@ -555,11 +555,11 @@
   },
   "models": [
     {
-      "name": "haruto",
+      "name": "umaru",
       "paths": [
-        "/asset/live2d/haruto.model.json"
+        "/asset/live2d/umaru/model.json"
       ],
-      "message": "主题自带的 haruto 模型（Cubism 2）"
+      "message": "HesperusVenus/live2d 里的 umaru 模型（Cubism 2）"
     }
   ]
 }
