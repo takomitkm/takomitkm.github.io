@@ -84,17 +84,10 @@ footer:
 panels:
   categories: '<i class="fas fa-folder-open fa-fw"></i>'
   tags: '<i class="fas fa-tags fa-fw"></i>'
-audioplayer:
-  icons:
-    caption: '<i class="fas fa-music fa-fw"></i>'
-    plus: '<i class="fas fa-plus fa-fw"></i>'
-meting:
-  server: netease
-  type: song
-  id: "448155"
-  api: "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r"
-  theme: "#ff3300"
-  list_height: "297px"
+biliplayer:
+  playlist: /data/bili-playlist.json
+  index: 0
+  countdown: 3
 recentposts:
   icons:
     caption: '<i class="fas fa-clock fa-fw"></i>'
@@ -168,7 +161,7 @@ serviceWorker:
   opts:
     networkTimeoutSeconds: 5
   routes:
-    - pattern: !!js/regexp /(hm\.baidu\.com|google\.com|api\.injahow\.cn|api\.github\.com|clustrmaps\.com|cdn\.jsdelivr\.net)/
+    - pattern: !!js/regexp /(hm\.baidu\.com|google\.com|bilibili\.com|bilivideo\.com|hdslb\.com|api\.github\.com|clustrmaps\.com|cdn\.jsdelivr\.net)/
       strategy: networkOnly
     - pattern: !!js/regexp /(icon-lib|font-mustom|MPlayer)/
       strategy: networkOnly

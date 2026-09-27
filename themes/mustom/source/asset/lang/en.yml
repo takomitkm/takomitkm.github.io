@@ -52,7 +52,14 @@ footer:
 panels:
   categories: CATEGORIES
   tags: TAGS
-audioplayer: APlayer.js %s Meting.js
+biliplayer:
+  caption: BILIBILI BGM
+  willplay: BGM starts in a moment
+  cancel: CANCEL AUTOPLAY
+  play: PLAY
+  sound: UNMUTE
+  prev: PREV
+  next: NEXT
 hitokoto: HITOKOTO
 recentposts:
   caption: RECENT POSTS

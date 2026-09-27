@@ -1,5 +1,3 @@
-import _run_APlayer from "./plugin/APlayer.min.js";
-import _run_Meting from "./plugin/Meting.min.js";
 import _run_AV from "./plugin/av-min.js";
 import _run_Valine from "./plugin/Valine.min.js";
 import evanyou from "./plugin/evanyou.js";
@@ -24,7 +22,7 @@ import settings from "./part/settings.js";
 import footer from "./part/footer.js";
 import pather from "./part/pather.js";
 import panels from "./part/panels.js";
-import audioplayer from "./part/audioplayer.js";
+import biliplayer from "./part/biliplayer.js";
 import toc from "./part/toc.js";
 import comment from "./part/comment.js";
 import translater from "./part/translater.js";
@@ -42,7 +40,6 @@ import empty from "./part/empty.js";
 import notification from "./part/notification.js";
 import iconlib from "./part/iconlib.js";
 
-_run_APlayer();
 _run_AV();
 _run_Valine();
 
@@ -152,7 +149,7 @@ const applyConfig = o => {
   settings.set('langshift', config.get('langshift'));
   settings.set('transfigure', config.get('transfigure'));
   settings.set('lyride', config.get('lyride'));
-  settings.set('autoplay', config.get('autoplay'));
+  settings.set('autoplay', biliplayer.enabled());
   config.get('closeDrawer') ? xdrawer.on() : xdrawer.off();
   util.runOnDesktop(d => {
     config.get('closeAside') ? xaside.on() : xaside.off();
@@ -268,6 +265,7 @@ const final_load = o => util.layoutParts(parts => {
       });
       activateSpinner(false);
       applyConfig();
+      biliplayer.ready();
       //baiduPush();
     }
   }, lock_wait);
@@ -682,7 +680,7 @@ live2d(z => {
         skin: false,
         settings: false,
         pather: false,
-        audioplayer: false,
+        biliplayer: false,
         xcanvas: false,
         adframe: false,
         empty: false,
@@ -739,11 +737,8 @@ live2d(z => {
         checklist.xcanvas = true;
       });
 
-      audioplayer.init(null, el => {
-        const mj = el && el.querySelector('meting-js');
-        if (mj && mj.getAttribute('id')) _run_Meting();
-        else el && el.remove();
-        checklist.audioplayer = true;
+      biliplayer.init(null, el => {
+        checklist.biliplayer = true;
       });
 
       goingto.init(null, el => {
@@ -853,7 +848,7 @@ live2d(z => {
             scrolling();
             fixMainHeight();
           } else if (key === 'autoplay') {
-            flag && audioplayer.play();
+            byUser && (flag ? biliplayer.play() : biliplayer.stop());
           }
           byUser && config.set(key, flag);
           settings.transfigure(!noCanvas.value);
