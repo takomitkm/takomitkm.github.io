@@ -53,8 +53,9 @@ panels:
   categories: CATEGORIES
   tags: TAGS
 biliplayer:
-  caption: BILIBILI BGM
-  willplay: BGM starts in a moment
+  caption: MY PLAYLIST
+  willplay: My playlist starts in a moment
+  sound: UNMUTE
   cancel: CANCEL AUTOPLAY
   play: PLAY
   prev: PREV

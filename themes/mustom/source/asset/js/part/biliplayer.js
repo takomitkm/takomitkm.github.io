@@ -9,9 +9,11 @@ let list = [];
 let index = 0;
 let countdown = 3;
 let ticker = null;
-let nextTicker = null;
+let watcher = null;
 let mounted = false;
 let pageLoaded = false;
+let startedAt = 0;
+let deadline = 0;
 
 const SESSION_KEY = 'biliplayer:index';
 
@@ -36,8 +38,9 @@ const q = sel => element && element.querySelector(sel);
 
 const current = o => list[index];
 
-const srcOf = item => 'https://player.bilibili.com/player.html?bvid=' + item.bvid +
-  '&page=' + (item.page || 1) + '&danmaku=0&high_quality=1&autoplay=1';
+const srcOf = (item, at) => 'https://player.bilibili.com/player.html?bvid=' + item.bvid +
+  '&page=' + (item.page || 1) + '&danmaku=0&high_quality=1&autoplay=1' +
+  (at > 0 ? '&t=' + at : '');
 
 const frame = o => {
   let f = q('.p-biliplayer-stage iframe');
@@ -61,29 +64,50 @@ const render = o => {
   let item = current();
   if (!item) return;
   q('.p-biliplayer-now').innerText = item.title;
+  syncSound();
 };
 
-const play = o => {
+// 播放器不会往父窗口发任何消息，外层既拿不到 ended 也拿不到进度。
+// 这里只认一个本地截止时间，并用短周期 interval 去对表：后台标签页的
+// 定时器会被浏览器钳制，一次性 setTimeout 可能被整体推迟，对表则最坏只迟到
+// 一个 tick。
+const watch = o => {
+  window.clearInterval(watcher);
+  watcher = null;
+  if (!deadline) return;
+  watcher = window.setInterval(o => {
+    if (Date.now() < deadline) return;
+    window.clearInterval(watcher);
+    watcher = null;
+    step(1);
+  }, 2000);
+};
+
+// 顶层文档一旦有过真实交互，之后新挂的 B 站 iframe 就是有声音的（实测）；
+// 没有交互时浏览器按自动播放策略静音起播。所以"要不要给开启声音按钮"
+// 直接看 userActivation，不需要去猜 iframe 里的状态（跨域也读不到）。
+const audible = o => navigator.userActivation ? !!navigator.userActivation.hasBeenActive : true;
+
+const syncSound = o => {
+  let b = q('.p-biliplayer-sound');
+  b && b.classList.toggle('HIDE', !mounted || audible());
+};
+
+const elapsed = o => mounted ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
+
+const play = at => {
   let item = current();
   if (!item || !element) return;
   window.clearInterval(ticker);
   ticker = null;
-  frame().src = srcOf(item);
+  let from = Math.min(Number(at) || 0, Math.max(0, (item.duration || 0) - 2));
+  frame().src = srcOf(item, from);
+  startedAt = Date.now() - from * 1000;
+  deadline = item.duration ? Date.now() + (item.duration - from) * 1000 + 4000 : 0;
   mounted = true;
   mask(null);
   render();
-  queue();
-};
-
-const queue = o => {
-  let item = current();
-  window.clearTimeout(nextTicker);
-  nextTicker = null;
-  if (!item || !item.duration) return;
-  nextTicker = window.setTimeout(o => {
-    nextTicker = null;
-    step(1);
-  }, item.duration * 1000 + 4000);
+  watch();
 };
 
 const stop = o => {
@@ -91,10 +115,12 @@ const stop = o => {
   f && f.remove();
   window.clearInterval(ticker);
   ticker = null;
-  window.clearTimeout(nextTicker);
-  nextTicker = null;
+  window.clearInterval(watcher);
+  watcher = null;
   mounted = false;
+  deadline = 0;
   mask('manual');
+  syncSound();
 };
 
 const begin = o => {
@@ -145,6 +171,7 @@ const pick = o => {
 const wire = o => {
   q('.p-biliplayer-cancel').onclick = o => settings.set('autoplay', false, true);
   q('.p-biliplayer-start').onclick = o => settings.set('autoplay', true, true);
+  q('.p-biliplayer-sound').onclick = o => play(elapsed());
   q('.p-biliplayer-prev').onclick = o => step(-1);
   q('.p-biliplayer-next').onclick = o => step(1);
   q('.p-biliplayer-off').onclick = o => { stop(); element.classList.add('HIDE'); };
