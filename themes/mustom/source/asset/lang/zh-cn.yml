@@ -55,7 +55,6 @@ panels:
 biliplayer:
   caption: 我的歌单
   willplay: 即将开始播放我的歌单
-  sound: 开启声音
   cancel: 取消自动播放
   play: 播放
   prev: 上一首

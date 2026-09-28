@@ -12,6 +12,7 @@ let ticker = null;
 let watcher = null;
 let mounted = false;
 let pageLoaded = false;
+let armed = false;
 let startedAt = 0;
 let deadline = 0;
 
@@ -64,7 +65,6 @@ const render = o => {
   let item = current();
   if (!item) return;
   q('.p-biliplayer-now').innerText = item.title;
-  syncSound();
 };
 
 // 播放器不会往父窗口发任何消息，外层既拿不到 ended 也拿不到进度。
@@ -84,13 +84,23 @@ const watch = o => {
 };
 
 // 顶层文档一旦有过真实交互，之后新挂的 B 站 iframe 就是有声音的（实测）；
-// 没有交互时浏览器按自动播放策略静音起播。所以"要不要给开启声音按钮"
-// 直接看 userActivation，不需要去猜 iframe 里的状态（跨域也读不到）。
+// 没有交互时浏览器按自动播放策略静音起播，任何站点代码都绕不过去。
+// 所以这里不做按钮：静音挂载时挂一个一次性手势监听，页面被点下第一下的
+// 瞬间用 &t= 原位重挂，把已经听到的进度接上。
 const audible = o => navigator.userActivation ? !!navigator.userActivation.hasBeenActive : true;
 
-const syncSound = o => {
-  let b = q('.p-biliplayer-sound');
-  b && b.classList.toggle('HIDE', !mounted || audible());
+const onGesture = o => {
+  window.removeEventListener('pointerdown', onGesture, true);
+  window.removeEventListener('keydown', onGesture, true);
+  armed = false;
+  if (mounted) play(elapsed());
+};
+
+const armGesture = o => {
+  if (armed || audible()) return;
+  armed = true;
+  window.addEventListener('pointerdown', onGesture, true);
+  window.addEventListener('keydown', onGesture, true);
 };
 
 const elapsed = o => mounted ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
@@ -108,6 +118,7 @@ const play = at => {
   mask(null);
   render();
   watch();
+  armGesture();
 };
 
 const stop = o => {
@@ -117,10 +128,14 @@ const stop = o => {
   ticker = null;
   window.clearInterval(watcher);
   watcher = null;
+  if (armed) {
+    window.removeEventListener('pointerdown', onGesture, true);
+    window.removeEventListener('keydown', onGesture, true);
+    armed = false;
+  }
   mounted = false;
   deadline = 0;
   mask('manual');
-  syncSound();
 };
 
 const begin = o => {
@@ -171,7 +186,6 @@ const pick = o => {
 const wire = o => {
   q('.p-biliplayer-cancel').onclick = o => settings.set('autoplay', false, true);
   q('.p-biliplayer-start').onclick = o => settings.set('autoplay', true, true);
-  q('.p-biliplayer-sound').onclick = o => play(elapsed());
   q('.p-biliplayer-prev').onclick = o => step(-1);
   q('.p-biliplayer-next').onclick = o => step(1);
   q('.p-biliplayer-off').onclick = o => { stop(); element.classList.add('HIDE'); };
