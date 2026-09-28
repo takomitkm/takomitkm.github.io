@@ -9,8 +9,28 @@ let list = [];
 let index = 0;
 let countdown = 3;
 let ticker = null;
+let nextTicker = null;
 let mounted = false;
 let pageLoaded = false;
+
+const SESSION_KEY = 'biliplayer:index';
+
+const readSession = o => {
+  try {
+    let raw = window.sessionStorage.getItem(SESSION_KEY);
+    if (raw === null) return null;
+    let n = Number(raw);
+    return Number.isInteger(n) && n >= 0 ? n : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const writeSession = n => {
+  try {
+    window.sessionStorage.setItem(SESSION_KEY, String(n));
+  } catch (e) { }
+};
 
 const q = sel => element && element.querySelector(sel);
 
@@ -52,6 +72,18 @@ const play = o => {
   mounted = true;
   mask(null);
   render();
+  queue();
+};
+
+const queue = o => {
+  let item = current();
+  window.clearTimeout(nextTicker);
+  nextTicker = null;
+  if (!item || !item.duration) return;
+  nextTicker = window.setTimeout(o => {
+    nextTicker = null;
+    step(1);
+  }, item.duration * 1000 + 4000);
 };
 
 const stop = o => {
@@ -59,6 +91,8 @@ const stop = o => {
   f && f.remove();
   window.clearInterval(ticker);
   ticker = null;
+  window.clearTimeout(nextTicker);
+  nextTicker = null;
   mounted = false;
   mask('manual');
 };
@@ -82,6 +116,7 @@ const begin = o => {
 const step = delta => {
   if (!list.length) return;
   index = (index + delta + list.length) % list.length;
+  writeSession(index);
   mounted ? play() : render();
 };
 
@@ -98,7 +133,13 @@ const ready = o => {
 };
 
 const pick = o => {
-  index = Math.floor(Math.random() * list.length);
+  let saved = readSession();
+  if (saved !== null && saved < list.length) {
+    index = saved;
+  } else {
+    index = Math.floor(Math.random() * list.length);
+    writeSession(index);
+  }
 };
 
 const wire = o => {
