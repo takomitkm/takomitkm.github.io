@@ -57,7 +57,6 @@ biliplayer:
   willplay: BGM starts in a moment
   cancel: CANCEL AUTOPLAY
   play: PLAY
-  sound: UNMUTE
   prev: PREV
   next: NEXT
 hitokoto: HITOKOTO

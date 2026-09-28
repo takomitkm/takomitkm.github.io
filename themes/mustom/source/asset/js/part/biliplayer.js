@@ -9,26 +9,15 @@ let list = [];
 let index = 0;
 let countdown = 3;
 let ticker = null;
-let startedAt = 0;
-let elapsed = 0;
 let mounted = false;
-let activated = false;
 let pageLoaded = false;
 
 const q = sel => element && element.querySelector(sel);
 
 const current = o => list[index];
 
-const active = o => navigator.userActivation
-  ? navigator.userActivation.hasBeenActive
-  : activated;
-
-const srcOf = item => {
-  let url = 'https://player.bilibili.com/player.html?bvid=' + item.bvid +
-    '&page=' + (item.page || 1) + '&danmaku=0&high_quality=1&autoplay=1';
-  if (elapsed > 2) url += '&t=' + Math.floor(elapsed);
-  return url;
-};
+const srcOf = item => 'https://player.bilibili.com/player.html?bvid=' + item.bvid +
+  '&page=' + (item.page || 1) + '&danmaku=0&high_quality=1&autoplay=1';
 
 const frame = o => {
   let f = q('.p-biliplayer-stage iframe');
@@ -61,9 +50,7 @@ const play = o => {
   ticker = null;
   frame().src = srcOf(item);
   mounted = true;
-  startedAt = Date.now();
   mask(null);
-  q('.p-biliplayer-sound').classList.toggle('HIDE', active());
   render();
 };
 
@@ -73,9 +60,7 @@ const stop = o => {
   window.clearInterval(ticker);
   ticker = null;
   mounted = false;
-  elapsed = 0;
   mask('manual');
-  q('.p-biliplayer-sound').classList.add('HIDE');
 };
 
 const begin = o => {
@@ -97,17 +82,7 @@ const begin = o => {
 const step = delta => {
   if (!list.length) return;
   index = (index + delta + list.length) % list.length;
-  elapsed = 0;
   mounted ? play() : render();
-};
-
-const resume = o => {
-  if (mounted) elapsed = (Date.now() - startedAt) / 1000;
-  play();
-};
-
-const mark = o => {
-  activated = true;
 };
 
 const enabled = o => config.has('autoplay') ? !!config.get('autoplay') : true;
@@ -122,10 +97,13 @@ const ready = o => {
   start();
 };
 
+const pick = o => {
+  index = Math.floor(Math.random() * list.length);
+};
+
 const wire = o => {
   q('.p-biliplayer-cancel').onclick = o => settings.set('autoplay', false, true);
   q('.p-biliplayer-start').onclick = o => settings.set('autoplay', true, true);
-  q('.p-biliplayer-sound').onclick = o => { mark(); resume(); };
   q('.p-biliplayer-prev').onclick = o => step(-1);
   q('.p-biliplayer-next').onclick = o => step(1);
   q('.p-biliplayer-off').onclick = o => { stop(); element.classList.add('HIDE'); };
@@ -136,9 +114,6 @@ const init = (params, callback) => {
     element = el;
     callback && callback(element);
     countdown = Number(el.getAttribute('data-countdown')) || 3;
-    index = Number(el.getAttribute('data-index')) || 0;
-    document.addEventListener('pointerdown', mark, true);
-    document.addEventListener('keydown', mark, true);
     wire();
     ajax({
       url: el.getAttribute('data-playlist'),
@@ -150,7 +125,7 @@ const init = (params, callback) => {
           element.classList.add('HIDE');
           return;
         }
-        if (index >= list.length) index = 0;
+        pick();
         render();
         pageLoaded ? start() : mask('waiting');
       },

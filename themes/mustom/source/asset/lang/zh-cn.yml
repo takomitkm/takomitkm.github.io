@@ -57,7 +57,6 @@ biliplayer:
   willplay: 即将开始播放本站 BGM
   cancel: 取消自动播放
   play: 播放
-  sound: 开启声音
   prev: 上一首
   next: 下一首
 hitokoto: 一言

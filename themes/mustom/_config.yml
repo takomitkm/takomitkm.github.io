@@ -86,7 +86,6 @@ panels:
   tags: '<i class="fas fa-tags fa-fw"></i>'
 biliplayer:
   playlist: /data/bili-playlist.json
-  index: 0
   countdown: 3
 recentposts:
   icons:
