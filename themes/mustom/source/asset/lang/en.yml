@@ -40,7 +40,7 @@ settings:
     langshift: 简体中文
     night: Night Shift
     transfigure: "*1/2 Figure"
-    lyride: Hide Lyric
+    hideplayer: Hide Player
     autoplay: Autoplay
 footer:
   powered: Powered by %s

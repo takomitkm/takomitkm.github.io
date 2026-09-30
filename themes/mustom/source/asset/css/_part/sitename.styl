@@ -17,6 +17,16 @@
       .p-sitename-text
         display none
 
+// 整条都点得动、回首页，但不能继承 a 的 --color-link 变成橙红
+.p-sitename-link
+  color inherit
+  display inline-block
+  max-width 100%
+  overflow-x hidden
+  white-space nowrap
+  text-overflow ellipsis
+  vertical-align baseline
+
 .p-sitename-icon
   height 3em
   padding 0.5em 0

@@ -110,9 +110,12 @@
   // main.js 加），所以「窄窗口 + 桌面 UA」这种组合仍然按原来那张图显示，
   // 不会图没了播放器也没来
   .p-hitokoto.p-hitokoto-bgm
-    // 播放器接在 <img> 原来的位置上，所以图片让位
+    // 播放器接在 <img> 原来的位置上，所以图片让位；把播放器藏起来
+    // （设置里的"隐藏播放器"，或桌面版标题栏那个 ×）时图片回来
     > img
       display none
+    &.p-hitokoto-restored > img
+      display block
     // 视频比原来那张 6em 的图高得多，作者行继续绝对定位会压在视频上
     > .p-hitokoto-from
       position static

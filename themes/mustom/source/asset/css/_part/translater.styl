@@ -16,7 +16,10 @@
   .p-translater-bar
     border-radius $gap * 0.5
     border 1px solid var(--color-clear)
-    background var(--color-background)
+    // 这条栏要压在正文上面、还会顺着选区弹出，结果框可能盖到图上，
+    // 所以用 --color-translater-back（不透明），不用半透明的
+    // --color-background
+    background var(--color-translater-back)
     overflow hidden
     > span
       display block
@@ -63,7 +66,8 @@
     display none
     border-radius $gap * 0.5
     border 1px solid var(--color-clear)
-    background var(--color-background)
+    // 同上：不跟着面板那套 50% 透明度走
+    background var(--color-translater-back)
     position absolute
     // top 3em
     line-height 1.5

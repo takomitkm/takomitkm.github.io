@@ -13,7 +13,7 @@ const config = Object.assign({
   langshift: !isChinese,
   night: false,
   transfigure: false,
-  lyride: true,
+  hideplayer: false,
   autoplay: false,
   translater: 'zh'
 }, saved);

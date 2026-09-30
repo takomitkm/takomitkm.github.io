@@ -75,7 +75,7 @@ settings:
   langshift: '<i class="fas fa-globe-asia fa-fw"></i>'
   night: '<i class="fas fa-adjust fa-fw"></i>'
   transfigure: '<i class="fas fa-robot fa-fw"></i>'
-  lyride: '<i class="fas fa-eye-slash fa-fw"></i>'
+  hideplayer: '<i class="fas fa-eye-slash fa-fw"></i>'
   autoplay: '<i class="fas fa-play-circle fa-fw"></i>'
 footer:
   icons:

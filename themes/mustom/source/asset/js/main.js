@@ -148,7 +148,7 @@ const applyConfig = o => {
   settings.set('night', config.get('night'));
   settings.set('langshift', config.get('langshift'));
   settings.set('transfigure', config.get('transfigure'));
-  settings.set('lyride', config.get('lyride'));
+  settings.set('hideplayer', config.get('hideplayer'));
   settings.set('autoplay', biliplayer.enabled());
   config.get('closeDrawer') ? xdrawer.on() : xdrawer.off();
   skin.set(config.get('skin'));
@@ -856,8 +856,10 @@ live2d(z => {
             });
           } else if (key === 'transfigure') {
             flag ? root.classList.add('transfigure') : root.classList.remove('transfigure');
-          } else if (key === 'lyride') {
-            flag ? root.classList.add('lyride') : root.classList.remove('lyride');
+          } else if (key === 'hideplayer') {
+            biliplayer.hidden(flag);
+            // 右栏少了一块，滚动偏移和底部留白得重算（两个函数内部
+            // 都有 runOnDesktop 保护）
             scrolling();
             fixMainHeight();
           } else if (key === 'autoplay') {
@@ -915,8 +917,8 @@ live2d(z => {
               listen2Links();
               progress.to(100);
             });
-          } else if (key === 'lyride') {
-            flag ? root.classList.add('lyride') : root.classList.remove('lyride');
+          } else if (key === 'hideplayer') {
+            biliplayer.hidden(flag);
           } else if (key === 'autoplay') {
             byUser && (flag ? biliplayer.play() : biliplayer.stop());
           }

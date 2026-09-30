@@ -183,12 +183,28 @@ const pick = o => {
   }
 };
 
+// 设置里的"隐藏播放器"直接走这里。flag 是"要藏起来"的意思，所以
+// false（默认）是显示。
+const hidden = flag => {
+  if (!element) return;
+  // 手机版播放器是接在 .p-hitokoto 里那张图的原位上的，藏起来就得把图
+  // 还回去，否则面板底部空一块（CSS 靠 .p-hitokoto-restored 判断）
+  let panel = element.closest('.p-hitokoto');
+  panel && panel.classList.toggle('p-hitokoto-restored', flag);
+  if (flag) {
+    stop();
+    element.classList.add('HIDE');
+  } else {
+    element.classList.remove('HIDE');
+  }
+};
+
 const wire = o => {
   q('.p-biliplayer-cancel').onclick = o => settings.set('autoplay', false, true);
   q('.p-biliplayer-start').onclick = o => settings.set('autoplay', true, true);
   q('.p-biliplayer-prev').onclick = o => step(-1);
   q('.p-biliplayer-next').onclick = o => step(1);
-  q('.p-biliplayer-off').onclick = o => { stop(); element.classList.add('HIDE'); };
+  q('.p-biliplayer-off').onclick = o => hidden(true);
 };
 
 const init = (params, callback) => {
@@ -223,6 +239,7 @@ export default {
   init,
   play,
   stop,
+  hidden,
   enabled,
   ready
 };

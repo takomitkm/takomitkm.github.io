@@ -40,7 +40,7 @@ settings:
     langshift: English
     night: 夜间模式
     transfigure: 透明小人
-    lyride: 隐藏歌词
+    hideplayer: 隐藏播放器
     autoplay: 自动播放
 footer:
   powered: 由 %s 强力驱动
