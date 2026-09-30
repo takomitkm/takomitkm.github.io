@@ -15,8 +15,6 @@
   line-height 1
   white-space normal
   animation skin-appear 0.6s ease
-  @media (max-width: $app_mobile_width)
-    display none
 
 .p-skin-caption
   padding 0 $gap
@@ -55,3 +53,16 @@
   &.active
     &:after
       opacity 1
+
+// 手机版这块要放进抽屉，抽屉比 320px 窄，所以跟其它面板一样铺满整宽
+@media (max-width: $app_mobile_width)
+  .p-skin
+    width 100%
+    margin 0
+    border none
+    border-bottom 1px solid var(--color-clear)
+    border-radius 0
+  .p-skin-caption
+    text-align center
+    i
+      display none

@@ -27,17 +27,13 @@
   overflow-y: auto;
 }
 
-/* 1023px = mustom 自己的 $app_mobile_width；两套菜单在这个宽度以下互换 */
+/* 1023px = mustom 自己的 $app_mobile_width。
+   手机版不再用 ShiftNav 那个只有菜单的抽屉，改回主题自带的 .m-drawer——
+   它本来就带个人信息、菜单、皮肤、设置，分类/标签也一并搬了进去，
+   内容比 ShiftNav 全。ShiftNav 保留给 ≥1024px（那里它本来就隐藏）。 */
 @media (max-width: 1023px) {
-  #shiftnav-toggle-main {
-    display: flex;
-  }
-  .m-header {
-    padding-left: 62px;
-  }
-  .p-xdrawer,
-  .m-closeDrawer,
-  .m-drawer {
+  #shiftnav-toggle-main,
+  .shiftnav {
     display: none !important;
   }
   .m-app-inner,
@@ -46,5 +42,22 @@
   .m-footer {
     width: 100% !important;
     margin: 0 !important;
+  }
+}
+
+/* 抽屉里那份分类/标签只给手机看；桌面版仍然在右栏。 */
+@media (min-width: 1024px) {
+  .m-drawer .p-panels {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .m-aside .p-panels {
+    display: none !important;
+  }
+  /* 手机版抽屉够宽，联系方式那排 GitHub 图标露出来，和桌面一致 */
+  .m-drawer .p-brand-contacts {
+    display: block !important;
   }
 }

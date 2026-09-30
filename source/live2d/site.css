@@ -20,7 +20,10 @@
     width: 150px;
     height: 150px;
   }
+  /* 手机版移到右下角：waifu.css 里默认 left:0，这里换成 right:0 */
   #waifu {
+    left: auto;
+    right: 0;
     transform: translateY(12px);
   }
   #waifu:hover {
@@ -33,12 +36,14 @@
     min-height: 44px;
     padding: 4px 8px;
     width: 180px;
+    /* 贴住右边缘，否则气泡会从看板娘右边伸出屏幕外 */
+    right: 0;
   }
   #waifu-tool {
     gap: 3px;
-    left: -8px;
+    left: auto;
+    right: -8px;
     opacity: 1;
-    right: auto;
     top: 34px;
   }
   #waifu-tool svg {

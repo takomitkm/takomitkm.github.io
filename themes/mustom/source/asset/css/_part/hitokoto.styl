@@ -108,6 +108,11 @@
     font-size 1.25em
 
 @media (max-width: $app_mobile_width)
+  .p-hitokoto
+    // 手机版不放一言面板（那张 qf3cu.huaji.png），换成右栏那块"我的歌单"
+    display none
+
+@media (max-width: $app_mobile_width)
   :root.night
     .p-hitokoto
       img

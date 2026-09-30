@@ -151,9 +151,9 @@ const applyConfig = o => {
   settings.set('lyride', config.get('lyride'));
   settings.set('autoplay', biliplayer.enabled());
   config.get('closeDrawer') ? xdrawer.on() : xdrawer.off();
+  skin.set(config.get('skin'));
   util.runOnDesktop(d => {
     config.get('closeAside') ? xaside.on() : xaside.off();
-    skin.set(config.get('skin'));
     if (!config.has('skin')) {
       window.setTimeout(o => {
         skinPicked || skin.set('colorful');
@@ -861,7 +861,9 @@ live2d(z => {
     mobile(final) { // MOBILE
       let checklist = {
         xdrawer: false,
-        settings: false
+        settings: false,
+        skin: false,
+        biliplayer: false
       };
       let looper = window.setInterval(o => {
         let flag = true;
@@ -902,11 +904,27 @@ live2d(z => {
             });
           } else if (key === 'lyride') {
             flag ? root.classList.add('lyride') : root.classList.remove('lyride');
+          } else if (key === 'autoplay') {
+            byUser && (flag ? biliplayer.play() : biliplayer.stop());
           }
           byUser && config.set(key, flag);
         }
       }, el => {
         checklist.settings = true;
+      });
+      // 手机版抽屉里有皮肤面板，所以皮肤也要初始化（原来只在 desktop 分支里跑）
+      skin.init({
+        onclick(newKey, byUser) {
+          if (!byUser) return;
+          skinPicked = true;
+          config.set('skin', newKey);
+        }
+      }, el => {
+        checklist.skin = true;
+      });
+      // 右栏的手机版要显示"我的歌单"（桌面版在 aside 里）
+      biliplayer.init(null, el => {
+        checklist.biliplayer = true;
       });
 
     }

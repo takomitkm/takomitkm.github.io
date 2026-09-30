@@ -104,14 +104,22 @@
   white-space nowrap
   overflow-x hidden
   text-overflow ellipsis
+  a
+    color var(--color-post-title)
   @media (min-width: $app_mobile_width_min)
     a
       &:after
         margin-top -2px
         height 2px
+        background var(--color-post-title)
 
 .p-recentpost-meta
   padding $gap 0
+
+.p-recentpost-categories
+  color var(--color-post-categories)
+  a
+    color inherit
 
 @media (max-width: $app_mobile_width)
   .p-recentposts
