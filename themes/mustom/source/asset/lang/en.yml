@@ -1,4 +1,4 @@
-sitename: takomitkm's Personal Website
+sitename: takomitkm's 自留地
 brand:
   name: takomitkm
   slogan: "&quot;Notes, repro, archive&quot;"
@@ -54,6 +54,7 @@ panels:
   tags: TAGS
 biliplayer:
   caption: MY PLAYLIST
+  closebgm: CLOSE BGM
   willplay: My playlist starts in a moment
   cancel: CANCEL AUTOPLAY
   play: PLAY

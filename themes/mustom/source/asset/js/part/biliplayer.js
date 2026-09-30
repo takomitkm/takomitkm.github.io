@@ -183,12 +183,22 @@ const pick = o => {
   }
 };
 
+const closeBgm = o => {
+  stop();
+  element.classList.add('HIDE');
+  // 手机版播放器是塞进 .p-hitokoto 当那张图的替身的，关掉就是把图还回去
+  let panel = element.closest('.p-hitokoto');
+  panel && panel.classList.add('p-hitokoto-restored');
+};
+
 const wire = o => {
   q('.p-biliplayer-cancel').onclick = o => settings.set('autoplay', false, true);
   q('.p-biliplayer-start').onclick = o => settings.set('autoplay', true, true);
   q('.p-biliplayer-prev').onclick = o => step(-1);
   q('.p-biliplayer-next').onclick = o => step(1);
   q('.p-biliplayer-off').onclick = o => { stop(); element.classList.add('HIDE'); };
+  let offbar = q('.p-biliplayer-offbar-btn');
+  offbar && (offbar.onclick = closeBgm);
 };
 
 const init = (params, callback) => {

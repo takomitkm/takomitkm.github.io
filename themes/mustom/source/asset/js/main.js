@@ -242,6 +242,19 @@ const setScrolling = o => {
 };
 
 const final_load = o => util.layoutParts(parts => {
+  // 手机版一言面板被挪到了 .m-content 外面（见 util.run 的 mobile 分支），
+  // 躲得过 pjax 整块替换 .m-content 的 innerHTML，代价是显示与否得自己按
+  // 路径管；另外换页后 .m-content 里会多出一份没人用的旧面板，删掉，
+  // 否则 part() 的 querySelector 会挑到那一份
+  util.runOnMobile(m => {
+    let panels = document.querySelectorAll('.p-hitokoto');
+    let keep = panels[0];
+    panels.forEach(dom => {
+      if (dom === keep) return;
+      dom.remove();
+    });
+    keep && keep.classList.toggle('HIDE', !/^\/(index.html)?$/.test(pathname()));
+  });
   let checklist = (o => {
     let result = {};
     parts.forEach(name => {
@@ -926,6 +939,21 @@ live2d(z => {
       biliplayer.init(null, el => {
         checklist.biliplayer = true;
       });
+      // 手机版把播放器接到一言面板里，替掉那张 qf3cu.huaji.png 当底图。
+      // 两步都要在 .m-content 外面做，因为 pjax 会整块换掉 .m-content 的
+      // innerHTML：面板先挪到 .m-content 前面（位置不变，translater 本来
+      // 在手机上就不显示），播放器再塞进面板里，两样都躲过一次替换。
+      // 换页后 .m-content 里那份旧面板由 final_load 开头那段清掉。
+      let panel = document.querySelector('.p-hitokoto');
+      let player = document.querySelector('.p-biliplayer');
+      let content = document.querySelector('.m-content');
+      if (panel && player && content && panel.parentElement === content) {
+        content.parentElement.insertBefore(panel, content);
+        let pic = panel.querySelector('img');
+        pic ? panel.insertBefore(player, pic) : panel.appendChild(player);
+        // 这条 class 是 CSS 那边"图片让位"的开关，只在真的搬进来时才加
+        panel.classList.add('p-hitokoto-bgm');
+      }
 
     }
   }, (final) => { // FINAL
