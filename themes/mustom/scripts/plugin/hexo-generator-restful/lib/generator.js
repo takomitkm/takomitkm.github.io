@@ -19,6 +19,29 @@ function filterHTMLTags(str) {
     .replace(/\r?\n|\r/g, '')
     .replace(/<img[^>]*>(<br>)*/g, '') : null
 }
+
+var ENTITIES = {
+  nbsp: ' ', enbsp: ' ',ensp: ' ', emsp: ' ', thinp: ' ',
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'",
+  mdash: '—', ndash: '–', hellip: '…', middot: '·',
+  ldquo: '“', rdquo: '”', lsquo: '‘', rsquo: '’'
+};
+
+function preview(str, limit) {
+  var max = Number(limit) > 0 ? Number(limit) : 500;
+  var text = String(str || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&#(\d+);/g, function (all, code) { return String.fromCharCode(Number(code)); })
+    .replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, function (all, name) {
+      var key = name.replace('#x', 'x').toLowerCase();
+      return ENTITIES[key] === undefined ? all : ENTITIES[key];
+    })
+    .replace(/\s+/g, ' ').trim();
+  if (!text) return null;
+  if (text.length <= max) return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return text.slice(0, max).replace(/\s+$/, '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '......';
+}
 function fetchCovers(str) {
   var temp,
     imgURLs = [],
@@ -76,7 +99,7 @@ module.exports = function (cfg, site, hexo) {
         date: posts_props('date', post.date.format('YYYY-MM-DD')),
         updated: posts_props('updated', post.updated.format('YYYY-MM-DD')),
         path: posts_props('path', 'api/posts/' + post.abbrlink + '.json'),
-        excerpt: posts_props('excerpt', filterHTMLTags(post.excerpt)),
+        excerpt: posts_props('excerpt', preview(post.excerpt || post.content, cfg.excerpt_chars)),
         cover: posts_props('cover', post.cover || fetchCover(post.content)),
         content: posts_props('content', post.content),
         min2read: $min2read(post.content),
@@ -260,7 +283,7 @@ module.exports = function (cfg, site, hexo) {
       date: posts_props('date', post.date.format('YYYY-MM-DD')),
       updated: posts_props('updated', post.updated.format('YYYY-MM-DD')),
       path: posts_props('path', 'api/posts/' + post.abbrlink + '.json'),
-      excerpt: posts_props('excerpt', filterHTMLTags(post.excerpt)),
+      excerpt: posts_props('excerpt', preview(post.excerpt || post.content, cfg.excerpt_chars)),
       cover: posts_props('cover', post.cover || fetchCover(post.content)),
       url: cfg.root + post.path,
       abbrlink: post.abbrlink,

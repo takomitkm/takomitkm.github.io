@@ -143,3 +143,20 @@ pre
     color highlight-blue
   .keyword, .javascript .function
     color highlight-purple
+
+@media (max-width $app_mobile_width)
+  .markdown-body
+    pre, .highlight, .gist
+      margin-left 0
+      margin-right 0
+    pre, .highlight
+      padding-left $gap
+      padding-right $gap
+    .highlight
+      pre
+        white-space pre-wrap
+        word-break break-word
+      table
+        width 100%
+      .gutter
+        display none

@@ -14,3 +14,34 @@
     top: 60px;
   }
 }
+
+@media (max-width: 1023px) {
+  #live2d {
+    width: 150px;
+    height: 150px;
+  }
+  #waifu {
+    transform: translateY(12px);
+  }
+  #waifu:hover {
+    transform: translateY(12px);
+  }
+  #waifu-tips {
+    font-size: 13px;
+    line-height: 20px;
+    margin: -16px 0 0 0;
+    min-height: 44px;
+    padding: 4px 8px;
+    width: 180px;
+  }
+  #waifu-tool {
+    gap: 3px;
+    left: -8px;
+    opacity: 1;
+    right: auto;
+    top: 34px;
+  }
+  #waifu-tool svg {
+    height: 18px;
+  }
+}

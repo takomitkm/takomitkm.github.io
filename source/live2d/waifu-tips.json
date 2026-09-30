@@ -528,6 +528,10 @@
     "goodbye": "愿你有一天能与重要的人重逢。",
     "hitokoto": "这句一言来自 <span>「$1」</span>，是 <span>$2</span> 在 hitokoto.cn 投稿的。",
     "welcome": "欢迎阅读<span>「$1」</span>",
+    "hourly": [
+      "现在 {hour} 点了，",
+      "到点啦，{hour} 点了，"
+    ],
     "referrer": "Hello！来自 <span>$1</span> 的朋友",
     "hoverBody": [
       "干嘛呢你，快把手拿开～～",

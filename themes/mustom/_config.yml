@@ -18,6 +18,7 @@ author:
   small: /asset/img/author.small.png
   medium: /asset/img/author.medium.png
   large: https://github.com/takomitkm.png?size=256
+excerpt_chars: 500 # 首页 / 归档 / 分类 / 标签 列表里每篇摘要是按字数截断的，超出补 ......；单篇正文不受影响
 hitokoto:
   icon: '<i class="fas fa-circle-notch fa-fw"></i>'
   image: /asset/img/qf3cu.huaji.png

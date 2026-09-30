@@ -347,7 +347,13 @@ a
           opacity 1
           color #03a9f4
   table
-    word-break keep-all
+    @media (min-width $app_mobile_width_min)
+      word-break keep-all
+
+@media (max-width $app_mobile_width)
+  .markdown-body
+    code, a, td, th, p, li, h1, h2, h3, h4, h5, h6
+      overflow-wrap anywhere
 
 :root.colorful
   .m-evanyou-canvas
