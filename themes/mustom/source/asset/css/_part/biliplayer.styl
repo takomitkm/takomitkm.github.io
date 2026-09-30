@@ -106,25 +106,3 @@
     text-align center
   > .p-biliplayer-prev, > .p-biliplayer-next
     flex none
-
-// 桌面版用标题栏右边那个 × 关面板，手机版换成视频下方的一栏
-.p-biliplayer-offbar
-  display none
-
-@media (max-width: $app_mobile_width)
-  // 只在播放器被搬进一言面板时（＝手机版，见 main.js）才露出来，
-  // 别让"窄窗口 + 桌面 UA"的右栏里也多出这一条
-  .p-hitokoto > .p-biliplayer > .p-biliplayer-offbar
-    display block
-    background var(--color-clear)
-    .p-biliplayer-offbar-btn
-      cursor pointer
-      display block
-      width 100%
-      padding $gap * 0.5 $gap
-      border none
-      background none
-      color inherit
-      font-size inherit
-      line-height 2.5
-      text-align center

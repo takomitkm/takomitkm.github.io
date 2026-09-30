@@ -43,7 +43,7 @@ hexo server
 
 | 项目 | 值 | 说明 |
 | --- | --- | --- |
-| 断点 | 1023px | 与主题的 `$app_mobile_width` 对齐，ShiftNav 只在这个宽度以下出现 |
+| 断点 | 1023px | 与主题的 `$app_mobile_width` 对齐，手机版布局（含左上角抽屉菜单）在这个宽度以下生效 |
 | 看板娘尺寸 | 300x300 | `#live2d` 的 CSS 显示尺寸，改 `waifu.css` 即可 |
 | 模型 | umaru | Live2D Cubism 2，来自 HesperusVenus/live2d |
 

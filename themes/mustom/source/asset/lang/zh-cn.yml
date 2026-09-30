@@ -54,7 +54,6 @@ panels:
   tags: 标签
 biliplayer:
   caption: 我的歌单
-  closebgm: 关闭bgm
   willplay: 即将开始播放我的歌单
   cancel: 取消自动播放
   play: 播放

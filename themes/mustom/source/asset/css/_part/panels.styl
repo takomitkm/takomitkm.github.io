@@ -57,3 +57,13 @@
     text-align center
     i
       display none
+
+// 抽屉里也渲染了一份（frame.ejs），任一宽度只露一份：宽屏在右栏，
+// 窄屏在抽屉。两份都在 DOM 里、都填了数据，所以用 CSS 挑而不是搬
+@media (min-width: $app_mobile_width_min)
+  .m-drawer .p-panels
+    display none !important
+
+@media (max-width: $app_mobile_width)
+  .m-aside .p-panels
+    display none !important
