@@ -71,6 +71,21 @@
             width 100%
   .p-timeline-content
     user-select text
+  .p-timeline-row
+    &::after
+      content $divider
+      display block
+      clear both
+      text-align center
+      font-size $font_size * 0.85
+      line-height 2.2
+      letter-spacing 0.15em
+      color var(--color-text)
+      opacity 0.45
+      pointer-events none
+  .p-timeline-item:last-child .p-timeline-row:last-child
+    &::after
+      content none
   @media (min-width: $app_mobile_width_min)
     .p-timeline-date
       position relative
