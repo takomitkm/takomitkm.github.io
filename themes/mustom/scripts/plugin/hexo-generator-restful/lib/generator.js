@@ -4,6 +4,8 @@ var pagination = require('hexo-pagination');
 
 var toc = require('../../toc');
 
+var headingNumbers = require('../../heading-numbers');
+
 var $min2read = require('../../../helper/$min2read');
 
 var $word4post = require('../../../helper/$word4post');
@@ -353,6 +355,7 @@ module.exports = function (cfg, site, hexo) {
   if (restful.post) {
     apiData = apiData.concat(posts.map(function (post) {
       var path = 'api/posts/' + post.abbrlink + '.json';
+      var numbered = headingNumbers(post.content);
       return {
         path: path,
         data: JSON.stringify({
@@ -365,7 +368,7 @@ module.exports = function (cfg, site, hexo) {
           excerpt: filterHTMLTags(post.excerpt),
           cover: fetchCover(post.content),
           covers: fetchCovers(post.content),
-          content: post.content,
+          content: numbered,
           url: cfg.root + post.path,
           min2read: $min2read(post.content),
           word4post: $word4post(post.content),
@@ -381,7 +384,7 @@ module.exports = function (cfg, site, hexo) {
               url: cfg.root + post.next.path
             };
           })() : null,
-          toc: toc(post.content),
+          toc: toc(numbered),
           categories: post.categories.map(function (cat) {
             return {
               name: cat.name,
