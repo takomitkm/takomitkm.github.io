@@ -241,6 +241,70 @@ const setScrolling = o => {
   document.addEventListener('scroll', scrolling);
 };
 
+const dividerMark = '✟';
+
+const dividerFill = '⫘';
+
+// 分隔符的 ⫘ 个数按行宽重算，写成 --divider 给 CSS 的 content 用。
+// 模板里那份没人填的 .p-recentpost 宽度是 0，所以要挑第一个真有宽度的行；
+// 量不到（没有列表行、算不出可用宽度）就留着样式里的默认串
+const fitDividers = o => {
+  let content = root.querySelector('.m-content');
+  if (!content) return;
+  let num = v => parseFloat(v) || 0;
+  let row = null, room = 0, style = null;
+  content.querySelectorAll('.p-recentpost:not(:first-child), .p-timeline-row').forEach(el => {
+    if (row) return;
+    let box = el.parentElement;
+    if (!box) return;
+    let bs = window.getComputedStyle(box), rs = window.getComputedStyle(el);
+    let w = box.clientWidth - num(bs.paddingLeft) - num(bs.paddingRight)
+      - num(rs.marginLeft) - num(rs.marginRight) - num(rs.paddingLeft) - num(rs.paddingRight);
+    if (w <= 0) return;
+    style = window.getComputedStyle(el, el.classList.contains('p-recentpost') ? '::before' : '::after');
+    room = w;
+    row = el;
+  });
+  if (!row) return;
+  let probe = document.createElement('span');
+  probe.style.cssText = 'position:fixed;left:-9999px;top:0;visibility:hidden;white-space:nowrap';
+  probe.style.fontFamily = style.fontFamily;
+  probe.style.fontSize = style.fontSize;
+  probe.style.fontWeight = style.fontWeight;
+  probe.style.fontStyle = style.fontStyle;
+  probe.style.letterSpacing = style.letterSpacing;
+  document.body.appendChild(probe);
+  let measure = text => {
+    probe.textContent = text;
+    return probe.getBoundingClientRect().width;
+  };
+  let make = n => dividerMark + dividerFill.repeat(n) + dividerMark;
+  let unit = measure(dividerFill);
+  if (unit > 0 && room > measure(make(1))) {
+    let n = Math.max(1, Math.floor(room / unit) - 2);
+    while (n > 1 && measure(make(n)) > room) n--;
+    while (measure(make(n + 1)) <= room) n++;
+    let text = JSON.stringify(make(n));
+    content.style.getPropertyValue('--divider') !== text &&
+      content.style.setProperty('--divider', text);
+  }
+  probe.remove();
+};
+
+const watchDividers = o => {
+  let content = root.querySelector('.m-content');
+  if (!content) return;
+  if (!content.dataset.dividerWatched) {
+    content.dataset.dividerWatched = 'true';
+    if ('ResizeObserver' in window) {
+      new window.ResizeObserver(fitDividers).observe(content);
+    } else {
+      window.addEventListener('resize', fitDividers);
+    }
+  }
+  fitDividers();
+};
+
 const final_load = o => util.layoutParts(parts => {
   // 手机版一言面板被挪到了 .m-content 外面（见 util.run 的 mobile 分支），
   // 躲得过 pjax 整块替换 .m-content 的 innerHTML，代价是显示与否得自己按
@@ -279,6 +343,7 @@ const final_load = o => util.layoutParts(parts => {
       activateSpinner(false);
       applyConfig();
       biliplayer.ready();
+      watchDividers();
       //baiduPush();
     }
   }, lock_wait);

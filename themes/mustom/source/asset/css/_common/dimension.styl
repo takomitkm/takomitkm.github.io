@@ -19,4 +19,6 @@ $post_nav_width = 320px
 $extension_grid_width = 64px
 $float_button_min_app_width = 1488px
 // 列表页（首页 / 归档 / 分类 / 标签）两篇文章之间的分隔符
+// 默认 8 个 ⫘；js/main 会按行宽重算 ⫘ 的个数并写进 --divider
 $divider = '✟⫘⫘⫘⫘⫘⫘⫘⫘✟'
+$divider_value = var(--divider, $divider)

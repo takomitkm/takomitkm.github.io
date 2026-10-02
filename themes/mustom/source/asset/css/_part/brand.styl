@@ -31,7 +31,8 @@
 
 .p-brand-slogan
   line-height 3
-  white-space nowrap
+  // 不锁 nowrap：中文 slogan 16 字在 16px 下要 300px，比 .p-brand 的 256px 宽，
+  // 加上 .p-brand 的 overflow:hidden 会被裁掉尾巴，所以放行内换行
 
 .p-brand-counts
   padding-bottom $gap * 1.25
