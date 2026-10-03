@@ -22,3 +22,10 @@ $float_button_min_app_width = 1488px
 // 默认 8 个 ⫘；js/main 会按行宽重算 ⫘ 的个数并写进 --divider
 $divider = '✟⫘⫘⫘⫘⫘⫘⫘⫘✟'
 $divider_value = var(--divider, $divider)
+// 字体链走 CSS Fonts 默认的逐字回退：某款字体缺某个字时，只有那个字落到链里的下一款
+// 前三款都是外链（frame.ejs 的 <link>），第四款不注册任何东西，字形由访客设备决定
+$font_body = unquote("'Huiwen-mincho', 'STDongGuanTi Bld', 'Noto Sans SC', Arial, Helvetica, sans-serif")
+// 侧栏另起一款：slogan 里的「裻」U+88FB 不在汇文/上图/思源黑任何一款声明的码位段里，
+// 逐字回退会一路落到访客系统字体。思源宋体（Source Han Serif CN VF）382 切片 30,898 码位，
+// 侧栏固定文案（含 slogan 十六字）逐字核过全覆盖，字面也是宋体，和正文的汇文明朝体同一路。
+$font_drawer = unquote("'Source Han Serif CN VF', 'Huiwen-mincho', 'STDongGuanTi Bld', 'Noto Sans SC', Arial, Helvetica, sans-serif")

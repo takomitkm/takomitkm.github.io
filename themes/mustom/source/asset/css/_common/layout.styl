@@ -5,7 +5,7 @@ body, div, span, a, img, p, ul, ol, li, input
   transition color 0.2s, background 0.6s
 
 body
-  font-family 'Huiwen-mincho', 'STDongGuanTi Bld', Arial, Helvetica, sans-serif
+  font-family $font_body
   font-size $font_size
   line-height 2
   color var(--color-text)
@@ -17,7 +17,7 @@ body
   overflow-y scroll
 
 .markdown-body
-  font-family 'Huiwen-mincho', 'STDongGuanTi Bld', Arial, Helvetica, sans-serif
+  font-family $font_body
 
 a
   text-decoration none
@@ -132,6 +132,7 @@ a
 .m-drawer
   float left
   width $drawer_width
+  font-family $font_drawer
   white-space nowrap
   text-overflow ellipsis
   overflow-x hidden
