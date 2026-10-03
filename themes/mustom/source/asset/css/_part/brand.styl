@@ -50,7 +50,7 @@
   padding-bottom $gap * 1.5
   font-size 1.25em
   line-height 2
-  // 联系方式里也有用图片图标的（B 站那个是站点自己的 favicon.ico 原样存的一份，Font Awesome 5.12 没有 bilibili）
+  // 图标一律用目标站点自己的 favicon，外链不入库；显示尺寸只在这里定，浏览器运行时缩放
   .p-brand-contact-img
     width 1.2em
     height 1.2em
@@ -58,9 +58,7 @@
     display inline-flex
     align-items center
     justify-content center
-    // 必须给两个方向的尺寸都定死：inline-flex 是 inline-level 盒子，默认按基线对齐，
-    // 而字体图标的基线是字形基线、图片的基线是底边，两个盒子高度又不一样（20 和 24），
-    // 结果中心差 4px，看着就像错开了一行
+    // inline-level 的 flex 盒按基线对齐，而图片的基线是它的底边：不写死高度就会一格高一格矮
     width 2em
     height 2em
     vertical-align middle
@@ -69,6 +67,11 @@
     @media (min-width: $app_mobile_width_min)
       &:hover
         background var(--color-clear)
+
+// GitHub 自带的 favicon 是近黑的 #171515，夜间皮肤底色 #000000cc，不翻一下就是看不见
+:root.night
+  .p-brand-contact-dark
+    filter invert(1)
 
 @media (max-width: $app_mobile_width)
   .p-brand

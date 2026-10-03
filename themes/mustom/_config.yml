@@ -48,10 +48,10 @@ pather:
 contact:
   github:
     url: //github.com/takomitkm
-    icon: '<i class="fab fa-github fa-fw"></i>'
+    icon: '<img class="p-brand-contact-img p-brand-contact-dark" src="https://github.com/favicon.ico" alt="GitHub">'
   bilibili:
     url: //space.bilibili.com/675978454
-    icon: '<img class="p-brand-contact-img" src="/asset/img/bilibili.ico" alt="bilibili">'
+    icon: '<img class="p-brand-contact-img" src="https://www.bilibili.com/favicon.ico" alt="bilibili">'
 menuicons:
   main: '<i class="fas fa-sitemap fa-fw"></i>'
 menus:
