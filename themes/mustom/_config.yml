@@ -49,6 +49,9 @@ contact:
   github:
     url: //github.com/takomitkm
     icon: '<i class="fab fa-github fa-fw"></i>'
+  bilibili:
+    url: //space.bilibili.com/675978454
+    icon: '<img class="p-brand-contact-img" src="/asset/img/bilibili.png" alt="bilibili">'
 menuicons:
   main: '<i class="fas fa-sitemap fa-fw"></i>'
 menus:

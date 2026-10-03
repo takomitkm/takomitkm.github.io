@@ -30,9 +30,10 @@
   white-space nowrap
 
 .p-brand-slogan
-  line-height 3
-  // 不锁 nowrap：中文 slogan 16 字在 16px 下要 300px，比 .p-brand 的 256px 宽，
-  // 加上 .p-brand 的 overflow:hidden 会被裁掉尾巴，所以放行内换行
+  // 中文 slogan 是四行（zh-cn.yml 里用 <br> 断），行高不能再是 3，否则四行 192px
+  // 会把整张卡片撑爆；上下各留 $gap 补回原来单行 line-height 3 那点留白
+  line-height 1.6
+  padding $gap 0
 
 .p-brand-counts
   padding-bottom $gap * 1.25
@@ -49,8 +50,14 @@
   padding-bottom $gap * 1.5
   font-size 1.25em
   line-height 2
+  // 联系方式里也有用图片图标的（B 站那个用站点自带的 favicon，Font Awesome 5.12 没有 bilibili）
+  .p-brand-contact-img
+    width 1.2em
+    height 1.2em
   a
-    display inline-block
+    display inline-flex
+    align-items center
+    justify-content center
     width 2em
     color var(--color-text)
     border-radius $gap * 0.5

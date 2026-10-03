@@ -1,11 +1,12 @@
 sitename: takomitkm 的自留地
 brand:
   name: takomitkm
-  slogan: "&quot;至虛極也守情裻也萬物旁作吾以觀其復也&quot;"
+  slogan: "至虛極也<br>守情裻也<br>萬物旁作<br>吾以觀其復也"
   posts: 文章计数
   categories: 分类计数
   tags: 标签计数
   github: 通过Github关注我
+  bilibili: 通过B站关注我
   email: 通过邮件联系我
   qq: 通过QQ联系我
 menus:

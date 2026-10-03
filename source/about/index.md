@@ -12,7 +12,6 @@ avatar:
 Desmos r=1+\sin(6\theta)+\sin(10\theta)+\sin(300\theta)+\sin(2000\theta)
 
 介里系tkm用 Hexo 搭滴个人站：主题 Mustom，右下角看板娘来自 live2d-widget，`/live/` 系窝滴b站歌单。
-B 站空间：<https://space.bilibili.com/675978454>。
 
 
 💛 ｡*+୨୧ 关于我 ୨୧+*｡💛

@@ -152,6 +152,9 @@ a
     bottom 0
     height s('calc(100vh - 3em - %s)', $progress_height)
     overflow hidden
+    // 这一栏是定高固定栏，四行 slogan 之后卡片更高，侧栏内容（皮肤／设置）会被顶出
+    // 视口外且没有任何滚动入口，所以给它开纵向滚动（横向仍按原样裁掉）
+    overflow-y auto
 
 .m-frame
   float right
@@ -474,4 +477,4 @@ a
           text-align left
           padding-left 1.75em
           font-size 0.7em
-          line-height 3.35
+          line-height 1.6
