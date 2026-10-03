@@ -50,7 +50,7 @@
   padding-bottom $gap * 1.5
   font-size 1.25em
   line-height 2
-  // 联系方式里也有用图片图标的（B 站那个用站点自带的 favicon，Font Awesome 5.12 没有 bilibili）
+  // 联系方式里也有用图片图标的（B 站那个是站点自己的 favicon.ico 原样存的一份，Font Awesome 5.12 没有 bilibili）
   .p-brand-contact-img
     width 1.2em
     height 1.2em
@@ -58,7 +58,12 @@
     display inline-flex
     align-items center
     justify-content center
+    // 必须给两个方向的尺寸都定死：inline-flex 是 inline-level 盒子，默认按基线对齐，
+    // 而字体图标的基线是字形基线、图片的基线是底边，两个盒子高度又不一样（20 和 24），
+    // 结果中心差 4px，看着就像错开了一行
     width 2em
+    height 2em
+    vertical-align middle
     color var(--color-text)
     border-radius $gap * 0.5
     @media (min-width: $app_mobile_width_min)
