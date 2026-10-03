@@ -166,7 +166,7 @@ serviceWorker:
   routes:
     - pattern: !!js/regexp /\/favicon\.ico(\?.*)?$/
       strategy: fastest
-    - pattern: !!js/regexp /(hm\.baidu\.com|google\.com|bilibili\.com|bilivideo\.com|hdslb\.com|api\.github\.com)/
+    - pattern: !!js/regexp /(hm\.baidu\.com|google\.com|bilibili\.com|bilivideo\.com|hdslb\.com|api\.github\.com|busuanzi\.ibruce\.info)/
       strategy: networkOnly
     - pattern: !!js/regexp /.*\/asset\/part\/.+\.(html)(\?.*)?$/
       strategy: fastest
