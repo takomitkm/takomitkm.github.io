@@ -25,6 +25,9 @@ jobs:
           cache: npm
       - run: npm install --no-audit --no-fund
       - run: npx hexo generate
+      # 正文是客户端从 /api 渲染的，pagefind 只认静态 HTML：
+      # 先把 /api/posts 的正文以隐藏 data-pagefind-body 块注入产物页，再建索引
+      - run: node tools/search_index.mjs public
       # 弹窗搜索的索引：扫 public/ 里的 HTML，产出 public/pagefind/，随 artifact 一起部署
       - run: npx pagefind --site public
       - uses: actions/configure-pages@v5
