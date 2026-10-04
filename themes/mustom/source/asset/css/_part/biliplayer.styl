@@ -106,3 +106,13 @@
     text-align center
   > .p-biliplayer-prev, > .p-biliplayer-next
     flex none
+
+// 嵌的是 B 站外链播放器，它不向父页面报状态，暂停管不住——面板里把
+// 这件事讲明白，免得访客点了暂停还等它停
+.p-biliplayer-nopause
+  display block
+  padding $gap * 0.5 $gap $gap
+  font-size 0.7em
+  line-height 1.6
+  text-align center
+  opacity 0.6

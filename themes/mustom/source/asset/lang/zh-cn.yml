@@ -60,6 +60,7 @@ biliplayer:
   play: 播放
   prev: 上一首
   next: 下一首
+  nopause: 无法暂停，不想听就点右上角 × 关闭本栏
 heatmap:
   caption: 博客废话产量
   unit: 千字

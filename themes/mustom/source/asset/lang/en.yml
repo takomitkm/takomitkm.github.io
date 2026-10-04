@@ -60,6 +60,7 @@ biliplayer:
   play: PLAY
   prev: PREV
   next: NEXT
+  nopause: Cannot pause. Use the × above to close this panel.
 heatmap:
   caption: WAFFLE OUTPUT
   unit: k chars
