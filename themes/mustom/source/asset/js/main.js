@@ -23,6 +23,7 @@ import footer from "./part/footer.js";
 import pather from "./part/pather.js";
 import panels from "./part/panels.js";
 import biliplayer from "./part/biliplayer.js";
+import heatmap from "./part/heatmap.js";
 import toc from "./part/toc.js";
 import comment from "./part/comment.js";
 import translater from "./part/translater.js";
@@ -736,6 +737,9 @@ live2d(z => {
     toc.init(null, el => {
       checklist.toc = true;
     });
+    // 不进 checklist：它依赖 /api/posts.json 和 jsdelivr 上的 echarts，
+    // 任一个取不到都只该让这一块面板空着，不能把开站动画卡在这儿
+    heatmap.init(null, el => {});
     api('search', sdata => {
       search.init({
         search: sdata,

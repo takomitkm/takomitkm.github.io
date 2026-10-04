@@ -74,6 +74,7 @@
           <%- partial('_part/skin') %>
           <%- partial('_part/settings') %>
           <%- partial('_part/panels') %>
+          <%- partial('_part/heatmap') %>
           <div class="m-drawer-mark"></div>
           <!-- END drawer -->
         </div>
@@ -104,6 +105,7 @@
           <div class="m-aside">
             <%- partial('_part/panels') %>
             <%- partial('_part/biliplayer') %>
+            <%- partial('_part/heatmap') %>
             <% if (config.clustrmaps && config.clustrmaps.enable) { %>
             <div class="m-aside-clustrmaps">
               <script id="<%= config.clustrmaps.id %>" src="<%= config.clustrmaps.src %>"></script>

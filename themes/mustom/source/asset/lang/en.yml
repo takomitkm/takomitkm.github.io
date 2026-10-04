@@ -1,6 +1,6 @@
 sitename: takomitkm's 自留地
 brand:
-  name: takomitkm
+  name: TaKoMi
   slogan: y emprendo mi andar a una ruta real
   posts: Count of Posts
   categories: Count of Categories
@@ -60,6 +60,11 @@ biliplayer:
   play: PLAY
   prev: PREV
   next: NEXT
+heatmap:
+  caption: WRITING HEATMAP
+  unit: k chars
+adframe:
+  random: feeling lucky
 hitokoto: HITOKOTO
 recentposts:
   caption: RECENT POSTS
@@ -81,6 +86,7 @@ timeline:
   count: have <strong>%s</strong> posts written this year
 post:
   caption: POST
+  hint: "%s characters, about %s min. of reading"
   min2read: "%s min."
   date: Release date
   updated: Last update

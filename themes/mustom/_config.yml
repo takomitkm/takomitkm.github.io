@@ -174,7 +174,7 @@ serviceWorker:
       strategy: fastest
 adframe:
   icons:
-    qrcode: '<i class="fas fa-qrcode"></i>'
+    random: '<i class="fas fa-random"></i>'
     close: '<i class="fas fa-times-circle"></i>'
   ad: /asset/img/icon.medium.png
 empty:

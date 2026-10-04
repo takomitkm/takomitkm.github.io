@@ -18,6 +18,8 @@ const init = (params, callback) => {
       element.querySelector('.p-post-updated span').innerText = post.updated;
       element.querySelector('.p-post-wordcount span').innerText = post.word4post;
       element.querySelector('.p-post-min2read span').setAttribute('data-lang-params', post.min2read);
+      element.querySelector('.p-post-hint').setAttribute('data-lang-params',
+        JSON.stringify([post.hintWord, post.hintMinute]));
       element.querySelector('.p-post-content').innerHTML = post.content;
       let categories = element.querySelector('.p-post-categories span');
       post.categories.forEach((cat, j) => {

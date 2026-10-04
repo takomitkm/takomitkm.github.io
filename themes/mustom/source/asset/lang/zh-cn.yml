@@ -1,6 +1,6 @@
 sitename: takomitkm 的自留地
 brand:
-  name: takomitkm
+  name: TaKoMi
   slogan: "至虛極也<br>守情裻也<br>萬物旁作<br>吾以觀其復也"
   posts: 文章计数
   categories: 分类计数
@@ -60,6 +60,11 @@ biliplayer:
   play: 播放
   prev: 上一首
   next: 下一首
+heatmap:
+  caption: 产量热力图
+  unit: 千字
+adframe:
+  random: 闲逛
 hitokoto: 一言
 recentposts:
   caption: 近期文章
@@ -81,6 +86,7 @@ timeline:
   count: 共写有 <strong>%s</strong> 篇文章
 post:
   caption: 文章
+  hint: "本文总计 %s 字, 阅读约需要 %s 分钟"
   min2read: "%s 分钟"
   date: 发布日期
   updated: 更新日期

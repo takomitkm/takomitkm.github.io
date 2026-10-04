@@ -16,6 +16,19 @@ var $encode = require('../../../helper/$encode');
 
 var $gallery = require('../../../helper/$gallery');
 
+var $count = require('../../../helper/$count');
+
+// 参照 Hugo 的 CJK 默认值：400 字/分钟，字数一律按千位小数显示
+function hintOf(content) {
+  var counted = $count(content);
+  var chars = counted.zh + counted.en;
+  return {
+    chars: chars,
+    hintWord: (chars / 1000).toFixed(2) + 'k',
+    hintMinute: Math.max(1, Math.floor(chars / 400))
+  };
+}
+
 function filterHTMLTags(str) {
   return str ? str
     .replace(/\r?\n|\r/g, '')
@@ -59,6 +72,13 @@ function fetchCover(str) {
 }
 
 module.exports = function (cfg, site, hexo) {
+
+  // cfg.root 已经带尾斜杠，而 front matter 里给了 permalink 的文章
+  // （hexo 的 __permalink 分支）path 又带头斜杠，直接相加会拼出
+  // //time-capsule/… 这种被浏览器当成主机名的地址
+  var urlOf = function (p) {
+    return String(cfg.root).replace(/\/+$/, '') + '/' + String(p).replace(/^\/+/, '');
+  };
 
   var restful = {
     site: true,
@@ -106,7 +126,7 @@ module.exports = function (cfg, site, hexo) {
         content: posts_props('content', post.content),
         min2read: $min2read(post.content),
         word4post: $word4post(post.content),
-        url: cfg.root + post.path,
+        url: urlOf(post.path),
         categories: posts_props('categories', function () {
           return post.categories.map(function (cat) {
             const name = (
@@ -115,7 +135,7 @@ module.exports = function (cfg, site, hexo) {
             return {
               name: name,
               path: 'api/categories/' + name + '.json',
-              url: cfg.root + cat.path
+              url: urlOf(cat.path)
             };
           });
         }),
@@ -127,7 +147,7 @@ module.exports = function (cfg, site, hexo) {
             return {
               name: name,
               path: 'api/tags/' + name + '.json',
-              url: cfg.root + tag.path
+              url: urlOf(tag.path)
             };
           });
         })
@@ -154,7 +174,7 @@ module.exports = function (cfg, site, hexo) {
           perPage: 0,
           data: {
             name: name,
-            url: cfg.root + item.path,
+            url: urlOf(item.path),
             path: 'api/' + kind + '/' + item.slug + '.json',
             postlist: item.posts.sort('-date').filter(function (post) {
               return post.published;
@@ -287,7 +307,8 @@ module.exports = function (cfg, site, hexo) {
       path: posts_props('path', 'api/posts/' + post.abbrlink + '.json'),
       excerpt: posts_props('excerpt', preview(post.excerpt || post.content, cfg.excerpt_chars)),
       cover: posts_props('cover', post.cover || fetchCover(post.content)),
-      url: cfg.root + post.path,
+      ...hintOf(post.content),
+      url: urlOf(post.path),
       abbrlink: post.abbrlink,
       categories: posts_props('categories', function () {
         return post.categories.map(function (cat) {
@@ -297,7 +318,7 @@ module.exports = function (cfg, site, hexo) {
           return {
             name: name,
             path: 'api/categories/' + name + '.json',
-            url: cfg.root + cat.path
+            url: urlOf(cat.path)
           };
         });
       }),
@@ -309,7 +330,7 @@ module.exports = function (cfg, site, hexo) {
           return {
             name: name,
             path: 'api/tags/' + name + '.json',
-            url: cfg.root + tag.path
+            url: urlOf(tag.path)
           };
         });
       })
@@ -324,7 +345,7 @@ module.exports = function (cfg, site, hexo) {
   var searchlist = posts.map(function (post) {
     return {
       title: post.title,
-      url: cfg.root + post.path,
+      url: urlOf(post.path),
       content: post._content,
       categories: post.categories.map(function (cat) {
         return cat.name;
@@ -369,19 +390,20 @@ module.exports = function (cfg, site, hexo) {
           cover: fetchCover(post.content),
           covers: fetchCovers(post.content),
           content: numbered,
-          url: cfg.root + post.path,
+          url: urlOf(post.path),
           min2read: $min2read(post.content),
           word4post: $word4post(post.content),
+          ...hintOf(post.content),
           prev_post: post.prev ? (o => {
             return {
               title: post.prev.title,
-              url: cfg.root + post.prev.path
+              url: urlOf(post.prev.path)
             };
           })() : null,
           next_post: post.next ? (o => {
             return {
               title: post.next.title,
-              url: cfg.root + post.next.path
+              url: urlOf(post.next.path)
             };
           })() : null,
           toc: toc(numbered),
@@ -389,14 +411,14 @@ module.exports = function (cfg, site, hexo) {
             return {
               name: cat.name,
               path: 'api/categories/' + cat.name + '.json',
-              url: cfg.root + cat.path
+              url: urlOf(cat.path)
             };
           }),
           tags: post.tags.map(function (tag) {
             return {
               name: tag.name,
               path: 'api/tags/' + tag.name + '.json',
-              url: cfg.root + tag.path
+              url: urlOf(tag.path)
             };
           })
         })
@@ -415,7 +437,7 @@ module.exports = function (cfg, site, hexo) {
           data: JSON.stringify({
             title: page.title,
             path: path,
-            url: cfg.root + page.path,
+            url: urlOf(page.path),
             content: page.content
           })
         };
