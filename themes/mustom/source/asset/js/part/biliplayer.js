@@ -9,11 +9,14 @@ let list = [];
 let index = 0;
 let countdown = 3;
 let ticker = null;
+let watcher = null;
 let mounted = false;
 let pageLoaded = false;
 let armed = false;
 let startedAt = 0;
+let deadline = 0;
 let touched = false;
+let touchPoll = null;
 
 const SESSION_KEY = 'biliplayer:index';
 
@@ -66,29 +69,50 @@ const render = o => {
   q('.p-biliplayer-now').innerText = item.title;
 };
 
-// 播放器不会往父窗口发任何消息，外层既拿不到 ended 也拿不到暂停和进度。
-// 早期版本在这里放过一个「本地截止时间一到就 step(1)」的看门狗来模拟
-// ended 自动换片，代价是：用户在 iframe 里点了暂停外层并不知情，时间一到
-// 照样切下一首带着声音播——暂停就白点了。要「暂停即停」就只能不做自动
-// 换片：播完的处置交给播放器自己的结束画面，换片走 PREV/NEXT 按钮。
+// 播放器不会往父窗口发任何消息，外层既拿不到 ended 也拿不到暂停和进度，
+// 自动换片只能认一个本地截止时间，并用短周期 interval 去对表：后台标签页
+// 的定时器会被浏览器钳制，一次性 setTimeout 可能被整体推迟，对表则最坏只迟到
+// 一个 tick。
+// 截止时间只对「没人碰过播放器」的视频生效：用户在 iframe 里点过暂停/进度/
+// 音量之后，播放状态外层就不可知了，这时候宁可不切，也不能在人家暂停的
+// 时候突然接下一首——pause 即停，换片交回给 PREV/NEXT。
+const watch = o => {
+  window.clearInterval(watcher);
+  watcher = null;
+  if (!deadline) return;
+  watcher = window.setInterval(o => {
+    if (Date.now() < deadline) return;
+    window.clearInterval(watcher);
+    watcher = null;
+    touched || step(1);
+  }, 2000);
+};
+
+// 「碰过播放器」的判定：点击落在 iframe 里时父窗口收不到任何事件——焦点
+// 仍在本窗口的子框架树内，window 连 blur 都不触发——但浏览器会把
+// document.activeElement 切成那个 iframe 元素，低频轮询盯住它即可。
+// 不挑输入设备，触屏点一下也算；切标签页、点地址栏不动 activeElement，不算。
+const trackTouch = on => {
+  window.clearInterval(touchPoll);
+  touchPoll = null;
+  if (!on) return;
+  touchPoll = window.setInterval(o => {
+    const f = q('.p-biliplayer-stage iframe');
+    if (f && document.activeElement === f) touched = true;
+  }, 400);
+};
 
 // 顶层文档一旦有过真实交互，之后新挂的 B 站 iframe 就是有声音的（实测）；
 // 没有交互时浏览器按自动播放策略静音起播，任何站点代码都绕不过去。
 // 所以这里不做按钮：静音挂载时挂一个一次性手势监听，页面被点下第一下的
 // 瞬间用 &t= 原位重挂，把已经听到的进度接上。
-// 但用户已经碰过播放器（比如先点了暂停）就不能再重挂——重挂等于
-// autoplay=1 强行续播。iframe 一被点过焦点就会离开顶层窗口，blur 记一笔，
-// 碰过就只解除监听、什么都不动。
+// 用户碰过播放器（比如点了暂停）时跳过重挂：重挂就是 autoplay=1 强行续播，
+// 会把人家点的暂停覆盖掉。
 const audible = o => navigator.userActivation ? !!navigator.userActivation.hasBeenActive : true;
-
-const onTouched = o => {
-  touched = true;
-};
 
 const onGesture = o => {
   window.removeEventListener('pointerdown', onGesture, true);
   window.removeEventListener('keydown', onGesture, true);
-  window.removeEventListener('blur', onTouched);
   armed = false;
   if (!touched && mounted) play(elapsed());
 };
@@ -96,10 +120,8 @@ const onGesture = o => {
 const armGesture = o => {
   if (armed || audible()) return;
   armed = true;
-  touched = false;
   window.addEventListener('pointerdown', onGesture, true);
   window.addEventListener('keydown', onGesture, true);
-  window.addEventListener('blur', onTouched);
 };
 
 const elapsed = o => mounted ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
@@ -112,9 +134,13 @@ const play = at => {
   let from = Math.min(Number(at) || 0, Math.max(0, (item.duration || 0) - 2));
   frame().src = srcOf(item, from);
   startedAt = Date.now() - from * 1000;
+  deadline = item.duration ? Date.now() + (item.duration - from) * 1000 + 4000 : 0;
+  touched = false; // 新挂的一曲重新算「碰过没有」
   mounted = true;
   mask(null);
   render();
+  trackTouch(true);
+  watch();
   armGesture();
 };
 
@@ -123,10 +149,13 @@ const stop = o => {
   f && f.remove();
   window.clearInterval(ticker);
   ticker = null;
+  window.clearInterval(watcher);
+  watcher = null;
+  deadline = 0;
+  trackTouch(false);
   if (armed) {
     window.removeEventListener('pointerdown', onGesture, true);
     window.removeEventListener('keydown', onGesture, true);
-    window.removeEventListener('blur', onTouched);
     armed = false;
   }
   mounted = false;
