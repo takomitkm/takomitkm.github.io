@@ -39,12 +39,19 @@
   padding-bottom $gap * 1.25
   line-height 2
   font-size 0.88em
-  > span
+  > span, > .p-brand-rss
     display inline-block
     padding 0 $gap
     &:nth-child(even)
       border-left 1px solid
       border-right 1px solid
+  .p-brand-rss
+    color var(--color-text)
+    // 1em 的 svg 在行盒里按基线放会顶到上沿，-0.125em 是 Font Awesome 同款的对齐量
+    svg
+      vertical-align -0.125em
+    &:hover
+      color var(--color-link)
 
 .p-brand-contacts
   padding-bottom $gap * 1.5

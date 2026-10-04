@@ -2,13 +2,32 @@ import part from "../common/part.js";
 
 let tag = 'search';
 let element = null;
-let search = null;
 let setClick = null;
 let onsearch = null;
+// Pagefind 入口懒加载：首次搜索才 import /pagefind/pagefind.js，
+// 索引由 CI 里 npx pagefind --site public 生成；本地 hexo server 没跑索引时会走到 failed
+let pagefind = null;
+// 连续触发（回车连按）时丢弃过期结果，只渲染最后一次
+let seq = 0;
+// 弹窗一屏放不下太多条，超出部分读者翻页也用不上；总数在 count 行里给
+const RESULT_LIMIT = 10;
 
 const messages = {
   initial: '(..•˘_˘•..)',
-  empty: '(╯°Д°)╯︵ ┻━┻'
+  empty: '(╯°Д°)╯︵ ┻━┻',
+  failed: '搜索索引没就绪 (；´д｀)'
+};
+
+const loadPagefind = async o => {
+  if (pagefind === null) {
+    try {
+      pagefind = await import('/pagefind/pagefind.js');
+    } catch (e) {
+      // false 表示「试过、没有」，避免每次搜索都重新请求 404
+      pagefind = false;
+    }
+  }
+  return pagefind || null;
 };
 
 const setup = o => {
@@ -23,80 +42,60 @@ const setup = o => {
     }
   };
 
+  let message = text => {
+    let div = document.createElement('div');
+    div.innerText = text;
+    div.classList.add('message');
+    searchResult.appendChild(div);
+  };
+
   button.removeEventListener('click', setClick);
-  setClick = e => {
-    if (input.value.trim().length <= 0) return;
+  setClick = async e => {
+    let query = input.value.trim();
+    if (query.length <= 0) return;
+    let mySeq = ++seq;
     searchResult.innerHTML = '';
-    let keywords = input.value.trim().toLowerCase().split(/[\s\-]+/);
 
-    search.forEach(item => {
-      let isMatched = true;
-      let title = item.title.trim().toLowerCase();
-      let content = item.content.trim().toLowerCase();
-      let url = item.url;
-      let titleIndex = -1;
-      let contentIndex = -1;
-      let firstOccur = -1;
-      if (title !== '' && content !== '') {
-        keywords.forEach((keyword, j) => {
-          titleIndex = title.indexOf(keyword);
-          contentIndex = content.indexOf(keyword);
-          if (titleIndex < 0 && contentIndex < 0) {
-            isMatched = false;
-          } else {
-            if (contentIndex < 0) {
-              contentIndex = 0;
-            }
-            if (j === 0) {
-              firstOccur = contentIndex;
-            }
-          }
-        });
-      }
-      if (isMatched) {
-        let _item = document.createElement('div');
+    let pf = await loadPagefind();
+    if (!pf) {
+      message(messages.failed);
+      return;
+    }
 
-        let match_title = item.title.trim();
-        if (titleIndex >= 0) {
-          keywords.forEach(function (keyword) {
-            let regS = new RegExp(keyword, "gi");
-            match_title = match_title.replace(regS, "<strong>" + keyword + "</strong>");
-          })
-        }
-        _item.innerHTML += "<a title='" + item.title.trim() + "' href='" + url + "'>" + match_title + "</a>";
+    let res;
+    try {
+      res = await pf.search(query);
+    } catch (err) {
+      if (mySeq === seq) message(messages.failed);
+      return;
+    }
+    let items = await Promise.all(res.results.slice(0, RESULT_LIMIT).map(r => r.data()));
+    if (mySeq !== seq) return;
 
-        let match_content = item.content.trim();
-        if (firstOccur >= 0) {
-          let start = firstOccur - 128;
-          let end = firstOccur + 128;
-          if (start < 0) {
-            start = 0;
-          }
-          if (start === 0) {
-            end = 256;
-          }
-          if (end > match_content.length) {
-            end = match_content.length;
-          }
-          match_content = match_content.substr(start, end);
-          keywords.forEach(function (keyword) {
-            let regS = new RegExp(keyword, "gi");
-            match_content = match_content.replace(regS, "<strong>" + keyword + "</strong>");
-          })
-          _item.innerHTML += "<p>... " + match_content + " ...</p>";
-        }
-
-        searchResult.appendChild(_item);
-      }
-    });
-
-    if (searchResult.innerHTML === '') {
-      let div = document.createElement('div');
-      div.innerText = messages.empty;
-      div.classList.add('message');
-      searchResult.appendChild(div);
+    if (res.results.length <= 0) {
+      message(messages.empty);
     } else {
-      onsearch && onsearch(keywords);
+      let count = document.createElement('div');
+      count.classList.add('count');
+      count.innerText = res.results.length > items.length
+        ? `共 ${res.results.length} 条，显示前 ${items.length} 条`
+        : `共 ${res.results.length} 条`;
+      searchResult.appendChild(count);
+      items.forEach(item => {
+        let title = item.meta && item.meta.title ? item.meta.title : item.url;
+        let _item = document.createElement('div');
+        let a = document.createElement('a');
+        a.href = item.url;
+        a.title = title;
+        a.innerText = title;
+        _item.appendChild(a);
+        // excerpt 自带 <mark> 高亮，样式在 search.styl 里与旧版 <strong> 同款
+        let p = document.createElement('p');
+        p.innerHTML = item.excerpt;
+        _item.appendChild(p);
+        searchResult.appendChild(_item);
+      });
+      onsearch && onsearch(query.toLowerCase().split(/[\s\-]+/));
     }
   };
   button.addEventListener('click', setClick);
@@ -107,7 +106,6 @@ const init = (params, callback) => {
     element = el;
     document.querySelector(tag) && document.querySelector(tag).replaceWith(element);
     if (params) {
-      params.search && (search = params.search);
       params.onsearch && (onsearch = params.onsearch);
       setup();
     }

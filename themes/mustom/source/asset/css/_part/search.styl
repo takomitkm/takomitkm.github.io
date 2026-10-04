@@ -73,7 +73,8 @@
     border-bottom 1px solid var(--color-clear)
     &:last-child
       border-bottom none
-    strong
+    strong, mark
+      background none
       color var(--color-search-highlight)
       text-decoration underline
     @media (min-width: $app_mobile_width_min)
@@ -96,6 +97,13 @@
     padding 2em
     text-align center
     font-size 2em
+  // 结果总数行（pagefind 弹窗搜索），贴着结果列表上沿右对齐
+  .count
+    user-select none
+    padding 1em 3em 0.5em
+    text-align right
+    font-size 0.88em
+    opacity 0.7
 
 @media (max-width: $app_mobile_width)
   .p-search-dialog
@@ -119,3 +127,5 @@
       padding 2em 1em
       text-align center
       font-size 1.5em
+    .count
+      padding 0.5em 1em

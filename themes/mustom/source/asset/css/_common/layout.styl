@@ -103,7 +103,8 @@ a
 
 .m-app
   padding-top $progress_height
-  max-width $app_width
+  // 不设 max-width：>1366px 的宽屏（含浏览器缩小）两侧栏保持定宽，中栏吃掉剩余宽度直到铺满；
+  // ≤1366px 时视口本来就不满 1366，行为与旧的 max-width 版本完全一致
   margin 0 auto
   // background forestgreen
 
@@ -166,18 +167,19 @@ a
   // background mediumspringgreen
   @media (min-width $app_mobile_width_min)
     transition all 0.6s
+    // .m-app 已铺满视口：右锚点不再是「居中的 1366px 应用右缘」，直接贴视口右缘
     &.sticky-bottom
       position fixed
-      right s('calc(50% - %s)', $app_width * 0.5)
+      right 0
       bottom 0
     &.sticky-top
       position fixed
-      right s('calc(50% - %s)', $app_width * 0.5)
+      right 0
       top s('calc(3em + %s)', $progress_height)
   @media (min-width $app_mobile_width_min)
     position fixed
     bottom 0
-    right s('calc(50% - %s + 3em)', $app_width * 0.5)
+    right 3em
     height s('calc(100vh - 3em - %s)', $progress_height)
     overflow hidden
   // $app_width_special = $app_width + $font_size * 1.5 // 3em / 2

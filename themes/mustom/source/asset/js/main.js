@@ -740,15 +740,13 @@ live2d(z => {
     // 不进 checklist：它依赖 /api/posts.json 和 jsdelivr 上的 echarts，
     // 任一个取不到都只该让这一块面板空着，不能把开站动画卡在这儿
     heatmap.init(null, el => {});
-    api('search', sdata => {
-      search.init({
-        search: sdata,
-        onsearch(k) {
-          listen2Links();
-        }
-      }, el => {
-        checklist.search = true;
-      });
+    // 弹窗搜索改走 pagefind 分片索引（CI 构建时生成），不再给每个访客预载整份 /api/search.json
+    search.init({
+      onsearch(k) {
+        listen2Links();
+      }
+    }, el => {
+      checklist.search = true;
     });
 
   }, { // NEXT
