@@ -4,14 +4,14 @@ import api from "../common/api.js";
 /**
  * heatmap Part
  *
- * 侧栏日历热力图：一格 = 一天，颜色 = 当天全站发文字数（千字）。
+ * 正文栏顶部的日历热力图：一格 = 一天，颜色 = 当天全站发文字数（千字）。
  * 做法取自 https://blog.douchi.space/hugo-blog-heatmap/ ，
  * 差别是他用 Go 模板在解析时把数据写进脚本，这里改成从 /api/posts.json 取，
  * 因为本站正文数据本来就只存在于那份 JSON 里。
  *
- * 桌面端只画 .m-aside 里那一份，手机端只画 .m-drawer 里那一份，
- * 两份靠 CSS 媒体查询互斥；part() 只认第一个元素，所以这里按 panels.js
- * 的老办法把每个副本都过一遍，宽为 0 的（当前被隐藏的那份）跳过。
+ * 面板只有一份，住在 .m-main 顶部（翻译栏的旧位置），桌面和手机共用；
+ * draw() 仍按 panels.js 的老办法把每个 .p-heatmap-chart 都过一遍、
+ * 宽为 0 的跳过——以后就算再出现多份副本（比如重新塞回侧栏），这里不用动。
  */
 
 let tag = 'heatmap';
@@ -140,6 +140,13 @@ const draw = () => {
     if (!box.clientWidth) return;
     let chart = box.__heatmap || window.echarts.init(box);
     box.__heatmap = chart;
+    // 面板宽度不再是侧栏那种一开始就定死的值：正文栏要等抽屉/侧栏揭开才到
+    // 最终宽度，echarts 又是照容器现量现画的——交给 ResizeObserver 兜底，
+    // 盒子宽窄一变就重画（redraw 自带去抖；observe 重复调用同一元素是幂等的）
+    resizeObserver && resizeObserver.observe(box);
+    // 画布尺寸只在 resize() 时重量，setOption 只改日历区间不改画布；
+    // 开站动画、抽屉/侧栏揭开的先后都会让 init 那次的宽度作废，两个都得刷新
+    chart.resize();
     chart.setOption(option(box), true);
     chart.off('click');
     chart.on('click', params => {
@@ -157,6 +164,10 @@ const redraw = () => {
   window.clearTimeout(timer);
   timer = window.setTimeout(draw, 200);
 };
+
+const resizeObserver = typeof window.ResizeObserver === 'function'
+  ? new window.ResizeObserver(redraw)
+  : null;
 
 const init = (params, callback) => {
   part(tag, el => {

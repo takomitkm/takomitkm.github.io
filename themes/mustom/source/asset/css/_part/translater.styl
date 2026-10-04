@@ -13,6 +13,11 @@
   transition transform 0.6s
   position relative
   z-index zIndex(10)
+  // 选中才现身：没有 .moved（没顺着选区浮出来）时连位置都不占，
+  // 不然正文栏顶上常年横着一条没人用的栏。浮出定位是先加 .moved
+  // 再读 offsetTop，display:none 状态下 offsetTop 为 0，顺序正好对上
+  &:not(.moved)
+    display none
   .p-translater-bar
     border-radius $gap * 0.5
     border 1px solid var(--color-clear)
