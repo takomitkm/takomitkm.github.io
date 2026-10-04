@@ -60,14 +60,13 @@ const group = list => {
 };
 
 // 面板宽度决定画几个月：一格约 8px，一周约 48px，最少 3 个月最多 12 个月。
-// 起点还要回退到所在那一周的周日：echarts 的日历是一列一周、一行一星期，
-// 起点落在周中时第一行（周日那行）的第一个格子会空着，整行看着就往右挪了一格
+// 起点不回退到周日，所以第一行（周日那行）左侧会空出几天，看着像整行右移一格；
+// 试过回退（start.setDate(start.getDate() - start.getDay())），已按她要求撤掉。
 const rangeOf = width => {
   let months = Math.max(3, Math.min(12, Math.floor(width / 48)));
   let end = new Date();
   let start = new Date();
   start.setMonth(start.getMonth() - months);
-  start.setDate(start.getDate() - start.getDay());
   let fmt = d => window.echarts.format.formatTime('yyyy-MM-dd', d);
   return [fmt(start), fmt(end)];
 };
