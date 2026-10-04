@@ -61,8 +61,9 @@ biliplayer:
   prev: PREV
   next: NEXT
 heatmap:
-  caption: WRITING HEATMAP
+  caption: WAFFLE OUTPUT
   unit: k chars
+  source: Layout borrowed from <a href="https://blog.douchi.space/hugo-blog-heatmap/" target="_blank">"如何给 Hugo 博客添加热力图"</a>, data side rewritten for hexo
 adframe:
   random: feeling lucky
 hitokoto: HITOKOTO
@@ -77,7 +78,7 @@ comment:
   placeholder: ヾﾉ≧∀≦)o  ~  Come on，write something here!
 translater:
   copy: COPY
-  to: HIGHLIGHT 'N TRANSLATE (Google)
+  to: TRANSLATE (Google)
   zh: 中文
   en: English
   jp: 日本語

@@ -13,11 +13,6 @@
   animation adframe-appear 0.6s ease
   @media (max-width: $app_mobile_width)
     display none
-  &.close
-    .p-adframe-random
-      display block
-    .p-adframe-close, .p-adframe-content
-      display none
 
 .p-adframe-random
   height $font_size * 2 + $gap
@@ -27,7 +22,6 @@
   font-size 1.35em
   background-color var(--color-background)
   border-radius 50%
-  display none
   cursor pointer
   animation adframe-appear 0.6s ease
   transition box-shadow 0.2s
@@ -35,23 +29,3 @@
     box-shadow 0 0 $gap * 0.5 var(--color-goingto-shadow)
   &:active
     box-shadow inset 0 0 $gap * 0.25 1px var(--color-goingto-shadow)
-
-.p-adframe-close
-  position absolute
-  top $gap
-  right $gap
-  cursor pointer
-  i
-    display block
-    color var(--color-link)
-
-.p-adframe-content
-  min-width 20vw
-  min-height 20vh
-  max-width 66vmin
-  background-color var(--color-background)
-  border-radius 0.5em
-  border $gap * 0.5 solid
-  img
-    width 100%
-    display block

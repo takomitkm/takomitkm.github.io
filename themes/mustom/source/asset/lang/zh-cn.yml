@@ -61,8 +61,9 @@ biliplayer:
   prev: 上一首
   next: 下一首
 heatmap:
-  caption: 产量热力图
+  caption: 博客废话产量
   unit: 千字
+  source: 做法取自椒盐豆豉<a href="https://blog.douchi.space/hugo-blog-heatmap/" target="_blank">《如何给 Hugo 博客添加热力图》</a>，数据端按本站的 hexo 重写过
 adframe:
   random: 闲逛
 hitokoto: 一言

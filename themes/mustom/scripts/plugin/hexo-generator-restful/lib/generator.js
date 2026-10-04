@@ -75,7 +75,9 @@ module.exports = function (cfg, site, hexo) {
 
   // cfg.root 已经带尾斜杠，而 front matter 里给了 permalink 的文章
   // （hexo 的 __permalink 分支）path 又带头斜杠，直接相加会拼出
-  // //time-capsule/… 这种被浏览器当成主机名的地址
+  // //开头的地址——浏览器把它当协议相对 URL 去解析主机名，点开 404。
+  // 时空胶囊那套 front-matter 开关已经删了，但 hexo 自己仍认 permalink，
+  // 所以这条防护留着。
   var urlOf = function (p) {
     return String(cfg.root).replace(/\/+$/, '') + '/' + String(p).replace(/^\/+/, '');
   };

@@ -347,6 +347,16 @@ a
   table
     @media (min-width $app_mobile_width_min)
       word-break keep-all
+    // github-markdown.min.css 给表格行写的是 #fff 和 #f6f8fa，那是给纯白页面写的；
+    // 本站白底只有 50% 透明度、colorful 皮肤还压着背景图，两行死白很扎眼。
+    // 统一降到 70% 不透明（alpha b3）。两点不用担心：
+    // 代码块内部也是 table > tr，但 _plugin/highlight.styl 里
+    // .markdown-body .highlight table tr 已经是 transparent，特异性比这条高、压得住；
+    // 夜间模式另有 var 覆盖，也在这条之后。
+    tr
+      background-color #ffffffb3
+      &:nth-child(2n)
+        background-color #f6f8fab3
 
 @media (max-width $app_mobile_width)
   .markdown-body

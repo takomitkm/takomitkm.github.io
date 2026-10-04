@@ -26,6 +26,10 @@
     .p-translater-bar-to, .p-translater-bar-zh, .p-translater-bar-en, .p-translater-bar-jp
       float left
       padding 0 1em
+    // 语言那一组自己占一行：中英两种界面都要这个形状，英文那条标签尤其长。
+    // 用 clear 显式断行，不等它撞满一行才换——自动换行只当窄屏兜底
+    .p-translater-bar-zh
+      clear left
     .p-translater-bar-copy
       float right
       padding 0 1em

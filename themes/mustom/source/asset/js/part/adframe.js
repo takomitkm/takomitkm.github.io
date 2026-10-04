@@ -1,12 +1,8 @@
 import part from "../common/part.js";
 import api from "../common/api.js";
-import storage from "../common/storage.js";
 
 let tag = 'adframe';
 let element = null;
-
-const stateKey = 'adFrameState';
-const isClose = storage.get(stateKey) || false;
 
 /**
  * 随机文章入口
@@ -29,24 +25,13 @@ const init = (params, callback) => {
     element = el;
     document.querySelector(tag) && document.querySelector(tag).replaceWith(element);
 
-    if (isClose) {
-      element.classList.add('close');
-    }
-    element.onclick = e => {
-      if (element.classList.contains('close')) {
-        element.classList.remove('close');
-        storage.set(stateKey, false);
-      } else {
-        element.classList.add('close');
-        storage.set(stateKey, true);
-      }
-    };
-    // 圆钮只负责随机，点它不该顺带把广告框开关一次
-    let random = element.querySelector('.p-adframe-random');
-    random && (random.onclick = e => {
+    // 原来这里还有一套 localStorage.adFrameState 的开合：整框点开是广告图、
+    // 点叉收成圆钮。二维码图标换成随机入口之后，圆钮不再是"打开框"的把手，
+    // 收起来就没有地方能再打开，所以整框删了、只留这个圆钮。
+    element.querySelector('.p-adframe-random').onclick = e => {
       e.stopPropagation();
       goRandom();
-    });
+    };
 
     callback && callback(element);
   });
