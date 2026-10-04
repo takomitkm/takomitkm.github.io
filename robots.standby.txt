@@ -1,0 +1,187 @@
+# ── 备用 robots.txt：本站线上那份没有换，这份只是备着 ──────────────────
+#
+# 为什么不换（她的决定，2026-10-04）：现在整站托管在 GitHub Pages，所以不用防爬虫。
+# 这条理由站得住的地方是具体的，不是"Pages 帮你挡了"：
+#   ① GitHub Pages 是静态托管，抓取打在 GitHub 的边缘节点上，不是自己的服务器，
+#      AI 抓取器抓得再凶也不会让她多掏一分钱、不会把站抓下线。防爬虫的实际收益
+#      （省带宽、防过载）在这个托管形态下不存在。
+#   ② 这个仓库本身是公开的（api.github.com 查得 private:false），正文的 markdown
+#      原文就跟着 source/_posts 一起可读。robots.txt 是给守规矩的抓取器看的声明，
+#      不是访问控制；想拿原文的人，仓库那条路比 robots.txt 直接得多。
+#   ③ 换来换去只有代价没有收益的一条：`User-agent: *` 全站放行正是 Google/Bing
+#      收录需要的状态，改成屏蔽版会把搜索收录一起牵动。
+#
+# 这份文件的用处：如果哪天换到自建服务器 / 开始有带宽成本 / 想认真退训练抓取，
+# 就把整个文件覆盖到 themes/mustom/source/robots.txt（主题那份现在是 13 字节的
+# `User-agent: *`，站点根 source/ 下没有另一份），然后 hexo clean && hexo generate，
+# 结果落在 public/robots.txt。下面"第一组"是解开注释、拿来即用的状态。
+#
+# 本文件放在仓库根目录：hexo 只拷 source/ 和主题 source/，它不会被发布出去，
+# 线上生效的仍是主题那份放行版。
+#
+# 分级口径与逐字引文：S:\apps\llm\agentwork\robots-ai\官方口径核对.md
+#   A = 归属方自己的文档页里逐字出现该名字，并且厂商自己明说它用于 AI 抓取/模型训练；
+#   B = 名字在厂商页里有，但厂商把用途说成搜索收录、链接预览、混合爬虫或用户触发的访问；
+#   C = 本地厂商侧查不到实据，只在 nixCraft 或第三方 SEO 清单里出现过。
+# nixCraft 原文（她存到下载目录那份 .htm 的逐字誊本）：同目录 nixcraft-原文条目.md
+# 与那份清单的逐条差异：同目录 对照.md
+
+# ── 基线：全站仍对正规搜索引擎放行 ────────────────────────────────
+User-agent: *
+Allow: /
+
+# ── 第一组：A 级 6 条，厂商自己写明"用于 AI 抓取/训练" ──────────────
+# 屏蔽它们的代价只是"少一份被训练的可能"，不动任何搜索收录。
+
+# OpenAI 训练类抓取。依据 https://platform.openai.com/docs/bots
+# 原文："GPTBot is used to make our generative AI foundation models more useful and
+# safe. It is used to crawl content that may be used in training our generative AI
+# foundation models. Disallowing GPTBot indicates a site's content should not be
+# used in training generative AI foundation models."
+# 官方同时说明这一项与 OAI-SearchBot 相互独立，关掉它不影响 ChatGPT 搜索收录。
+User-agent: GPTBot
+Disallow: /
+
+# Google 的训练令牌。依据
+# https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers
+# 原文："Google-Extended is a standalone product token that web publishers can use
+# to manage whether content Google crawls from their sites may be used for training
+# future generations of Gemini models…"；同段："Google-Extended does not impact a
+# site's inclusion in Google Search nor is it used as a ranking signal."
+# 同页另一句给这条加了一个限制："Google-Extended doesn't have a separate HTTP
+# request user agent string. Crawling is done with existing Google user agent
+# strings; the robots.txt user-agent token is used in a control capacity."
+# 中译：它没有独立的 HTTP 请求 UA 串，实际抓取用既有的 Google UA，这个令牌只起控制作用。
+# 所以按 UA 写日志过滤或防火墙规则拦不到它，robots.txt 是唯一对它生效的一层。
+User-agent: Google-Extended
+Disallow: /
+
+# Google 的另一条：站点所有者自己为构建 Vertex AI Agents 发起的那类抓取。
+# 同页原文："Crawling preferences addressed to the Google-CloudVertexBot user agent
+# affect crawls requested by the site owner for building Vertex AI Agents. It has no
+# effect on Google Search or other products."
+# nixCraft 全文未出现这个名字。
+User-agent: Google-CloudVertexBot
+Disallow: /
+
+# Anthropic 训练类抓取。依据
+# https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler
+# 原文："ClaudeBot helps enhance the utility and safety of our generative AI models
+# by collecting web content that could potentially contribute to their training.
+# When a site restricts ClaudeBot access, it signals that the site's future materials
+# should be excluded from our AI model training datasets."
+# 同页三句与写法直接相关："Anthropic's Bots respect 'do not crawl' signals by
+# honoring industry standard directives in robots.txt."；
+# "To limit crawling activity, we support the non-standard Crawl-delay extension to
+# robots.txt."；
+# "Alternate methods like blocking IP address(es) … may not work correctly or
+# persistently guarantee an opt-out, as doing so impedes our ability to read your
+# robots.txt file."——封 IP 反而可能让退出失效，因为它因此读不到你的 robots.txt。
+User-agent: ClaudeBot
+Disallow: /
+
+# Amazon 的训练相关抓取。依据 https://developer.amazon.com/amazonbot
+# 原文："Amazonbot is used to improve our products and services. This helps us
+# provide more accurate information to customers and may be used to train Amazon AI
+# models."
+# 同页承诺："Automated crawling from these listed user agents respects the Robots
+# Exclusion Protocol, honoring the user-agent and the allow/disallow directives.
+# …When a file can't be fetched, they will behave as if it does not exist."
+# 最后一句的意思是：robots.txt 取不到时按"没有这个文件"处理，所以屏蔽要稳就得让
+# 这个文件始终能被取到——这也是"改不改这份文件"值得单独想一次的原因。
+User-agent: Amazonbot
+Disallow: /
+
+# Apple 的退训练开关。依据 https://support.apple.com/en-us/119829
+# 原文："Web publishers can opt-out from having their content used to train
+# generative foundation models by disallowing Applebot-Extended in the robots.txt
+# file."
+# 注意：只 disallow 这一个，不要 disallow `Applebot`——后者管 Siri/Spotlight 的
+# 搜索收录（apple.com/legal/privacy："To power features such as search … Apple uses
+# Applebot, a web crawler"）。nixCraft 那份清单写的正是 `Applebot`，这是整份清单里
+# 最容易搞错的一条；Apple 给的纯退训练令牌 nixCraft 也没有。
+User-agent: Applebot-Extended
+Disallow: /
+
+# ── 第二组：B 级，管的都是"搜索/展示/用户触发"而不是训练 ───────────
+# 名字在厂商页里逐字有，但官方自述的用途不是训练，一写就掉那条渠道的曝光，
+# 属于站点目标取舍，不给默认值。逐条引文见 官方口径核对.md 第二节。
+
+# OpenAI 的搜索抓取：官方称 opt out 后"will not be shown in ChatGPT search answers,
+# though can still appear as navigational links"，并建议 allow。
+# 依据 https://platform.openai.com/docs/bots
+#User-agent: OAI-SearchBot
+#Disallow: /
+
+# Perplexity 的收录抓取。官方口径与 nixCraft 的理由相反，抄在这里以免误用：
+# "`PerplexityBot` is designed to surface and link websites in search results on
+# Perplexity. It is not used to crawl content for AI foundation models. To ensure
+# your site appears in search results, we recommend allowing `PerplexityBot` in your
+# site's `robots.txt` file…"
+# 依据 https://docs.perplexity.ai/docs/resources/perplexity-crawlers.md
+# 拦它的代价是"你在 Perplexity 搜索里不再出现"，收益不是"退出训练"。
+#User-agent: PerplexityBot
+#Disallow: /
+
+# Anthropic 面向用户搜索结果的抓取。同 8896518 页："Claude-SearchBot navigates the
+# web to improve search result quality for users."
+#User-agent: Claude-SearchBot
+#Disallow: /
+
+# Apple 的搜索收录（见上一组末尾的提醒）。
+#User-agent: Applebot
+#Disallow: /
+
+# Amazon 的搜索收录。官方称 Amzn-SearchBot 不做生成式训练，且"若 robots.txt 没提到
+# 它但放行了其他搜索 bot，它会沿用那些指令"。
+# 依据 https://developer.amazon.com/amazonbot
+#User-agent: Amzn-SearchBot
+#Disallow: /
+
+# You.com 的搜索引擎爬虫。UA 为 YouBot/1.0，官方文档 https://you.com/docs/youbot
+# 有专章 "Controlling YouBot Access → Using robots.txt"。
+#User-agent: YouBot
+#Disallow: /
+
+# Diffbot：厂商抓取文档里逐字出现 `User-agent: Diffbot`，但它自述的是商品化抓取服务。
+# 本地存盘 _work\pages\diffbot_docs_crawl.html
+#User-agent: Diffbot
+#Disallow: /
+
+# Common Crawl 的 CCBot：这一条我一开始判成 A，按核对文档的口径降回 B——
+# https://commoncrawl.org/ccbot 确实给了现成的两行（`User-agent: CCBot` +
+# `Disallow: /`）和 UA 串 `CCBot/2.0`，但它自述的用途是"公开抓取网页语料库"，
+# 那一页没有写模型训练，按"厂商自己明说用于训练"这条判据够不上 A。
+# 同页另有两条要记住：一是"we are aware of crawlers falsely identifying themselves
+# as CCBot"（有爬虫冒充它，写了这行不等于挡住了）；二是"CCBot is now run on dedicated
+# IP address ranges with reverse DNS"——这与 nixCraft 说的"Common Crawl 不提供 CIDR/IP
+# 段"相反，可以按反向 DNS 核验来源。
+# 多家 AI 公司的公开语料确实取自 Common Crawl，所以真要退训练，这条值得并进第一组；
+# 判据卡在这儿，就由用的人自己决定写不写。
+#User-agent: CCBot
+#Disallow: /
+
+# ── 第三组：不写成规则的条目，以及为什么不写 ──────────────────────
+#
+# ① 厂商自己声明 robots.txt 对它可能不适用，写了等于没写（三条都在 B 级里）：
+#    - ChatGPT-User（OpenAI，用户触发）："Because these actions are initiated by a
+#      user, robots.txt rules may not apply." https://platform.openai.com/docs/bots
+#      nixCraft 把它列为四条 OpenAI 屏蔽行之一，那是那份清单里最实在的一处失效。
+#    - Amzn-User（Amazon）：同页 "it may not follow all robots.txt directives."
+#    - Google 的用户触发类抓取器：该页 "these fetchers generally ignore robots.txt
+#      rules."
+#    nixCraft 原文也承认 robots.txt 拦不住不守规矩的："some poorly designed AI bots
+#      will ignore your robots.txt"。
+#
+# ② C 级——本地在厂商自己的页面上核不到逐字表述，故不主动写入：
+#    anthropic-ai、Claude-Web、FacebookBot、Bytespider、ImagesiftBot、Omgilibot、
+#    Omgili、Meta-ExternalAgent、Meta-ExternalFetcher、MistralAI-User、Poe、Timpibot、
+#    WebAutoIA，以及 Baidu/360/Sogou/PetalBot 一类国内爬虫。
+#    "核不到"不等于"不存在"。Meta 那条的取件台账：文档站 20 条 URL 记录里 16 条回
+#    404 壳页、帮助页回 1,542 字节错误页、Wayback 反爬拦截、instagram.com/robots.txt
+#    取回的是 HTML 壳页，而 Meta 自家 robots.txt 里逐字只有 facebookexternalhit 和
+#    meta-externalads（见 官方口径核对.md 第三节）。
+#    要跟大站的做法，tiktok.com/robots.txt 与 amazon.com/robots.txt 现成列了 27 与
+#    100 个 User-agent 组，可以照它们补。
+#
+# ③ nixCraft 正文单独建议、但没进他自己那份清单的：CCBot——第二组已经收了。
